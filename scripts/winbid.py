@@ -268,9 +268,10 @@ def lambda_handler(event, context):
             # start_time = beijing_time - timedelta(minutes=5)
             logger.info(f"start_time: {start_time}")
             for keyword in keyword_list:
-                result_1 = ct_search(keyword, start_time)
+                # result_1 = ct_search(keyword, start_time)
                 result_2 = tower_search(keyword, start_time)
-                result = result_1 + result_2
+                # result = result_1 + result_2
+                result = result_2
                 message = ''
                 for msg in result:
                     if msg not in bid_total:
