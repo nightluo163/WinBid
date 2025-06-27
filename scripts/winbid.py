@@ -264,9 +264,9 @@ def lambda_handler(event, context):
         bid_total = []
         while beijing_time <= end_time:
             # start_time = beijing_time - timedelta(days=2)
-            start_time = beijing_time - timedelta(minutes=5)
+            start_time = beijing_time - timedelta(minutes=2)
             logger.info(f"start_time: {start_time}")
-            send_test = webhook_test.send_text(f"start_time: {start_time}")
+            # send_test = webhook_test.send_text(f"start_time: {start_time}")
             for keyword in keyword_list:
                 result_1 = ct_search(keyword, start_time)
                 result_2 = tower_search(keyword, start_time)
@@ -287,16 +287,16 @@ def lambda_handler(event, context):
                     # result = webhook.send_text(message)
                     result_test = webhook_test.send_text(message)
                     # result_ot = webhook_ot.send_text(message)
-                    logger.info(f"关键词：{keyword}\n消息详情：{message}")
+                    # logger.info(f"关键词：{keyword}\n消息详情：{message}")
                     # logger.info(f"【调试】发送结果: {json.dumps(result)}")
                     logger.info(f"【调试】发送结果: {json.dumps(result_test)}")
                 else:
                     # logger.info(f"关键词：{keyword}\n消息详情：no")
                     continue
             if len(bid_total) >= 20:
-                logger.info(f"len：{len(bid_total)}")
+                # logger.info(f"len：{len(bid_total)}")
                 bid_total = bid_total[-6:]
-                logger.info(f"len：{len(bid_total)}")
+                # logger.info(f"len：{len(bid_total)}")
             beijing_time = datetime.now(timezone(timedelta(hours=8)))
             continue
 
