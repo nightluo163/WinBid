@@ -34,7 +34,6 @@ log_file = os.path.join(
     log_dir, 
     f"bid_log_{datetime.now().strftime('%Y%m%d')}.log"  # bid_log_20240627.log
 )
-# file_handler = logging.FileHandler(log_file, encoding='utf-8')
 # 无需 mode='w' 会自动每天创建新文件
 # log_file = os.path.join(log_dir, "bid_log.log")
 # file_handler = logging.FileHandler(log_file, encoding='utf-8')
