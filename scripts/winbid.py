@@ -256,7 +256,8 @@ def lambda_handler(event, context):
         
         bid_total = []
         while beijing_time <= end_time:
-            start_time = beijing_time - timedelta(minutes=5)
+            start_time = beijing_time - timedelta(days=2)
+            # start_time = beijing_time - timedelta(minutes=5)
             logger.info(f"start_time: {start_time}")
             for keyword in keyword_list:
                 result_1 = ct_search(keyword, start_time)
@@ -279,11 +280,16 @@ def lambda_handler(event, context):
                     # result_ot = webhook_ot.send_text(message)
                     logger.info(f"关键词：{keyword}\n消息详情：{message}")
                     # logger.info(f"【调试】发送结果: {json.dumps(result)}")
+                    logger.info(f"【调试】发送结果: {json.dumps(result_test)}")
                 else:
                     logger.info(f"关键词：{keyword}\n消息详情：no")
                     continue
+            if len(bid_total) >= 20:
+                logger.info(f"len：{len(bid_total)}")
+                bid_total = bid_total[:-6]
+                logger.info(f"len：{len(bid_total)}")
             beijing_time = datetime.now(timezone(timedelta(hours=8)))
-            break
+            continue
 
         now_time = beijing_time.strftime("%Y-%m-%d %H:%M:%S")
         # time_send = webhook_test.send_text(f"归零，更新！\n{now_time}")
@@ -292,7 +298,7 @@ def lambda_handler(event, context):
     except Exception as e:
         logger.error(f"全局异常: {str(e)}")
         # error_send = webhook.send_text(f"全局异常: {str(e)}")
-        # error_send = webhook_test.send_text(f"全局异常: {str(e)}")
+        error_send = webhook_test.send_text(f"全局异常: {str(e)}")
         return {
             'statusCode': 500,
             'body': json.dumps({'error': str(e)})
