@@ -246,7 +246,7 @@ def lambda_handler(event, context):
     try:
         utc_now = datetime.now(timezone.utc)
         beijing_time = utc_now.astimezone(timezone(timedelta(hours=8)))        
-        end_time = beijing_time - timedelta(hours=24)
+        end_time = beijing_time - timedelta(hours=8.1)
         # start_time = beijing_time - timedelta(minutes=65)
         # logger.info(f"start_time: {start_time}")
         logger.info(f"end_time: {end_time}")
