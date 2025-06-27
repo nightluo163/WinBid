@@ -1,7 +1,7 @@
 name: Run Bid_others
 on:
-  schedule:
-    - cron: '37 */4 * * *'
+  #schedule:
+    #- cron: '37 */4 * * *'
   workflow_dispatch:  # 允许手动触发
   repository_dispatch:  # 外部API触发
 env:
