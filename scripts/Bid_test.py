@@ -268,7 +268,7 @@ def lambda_handler(event, context):
         utc_now = datetime.now(timezone.utc)
         beijing_time = utc_now.astimezone(timezone(timedelta(hours=8)))        
         end_time = beijing_time - timedelta(minutes=15)
-        start_time = beijing_time - timedelta(minutes=75)
+        start_time = beijing_time - timedelta(minutes=65)
         logger.info(f"start_time: {start_time}")
         logger.info(f"end_time: {end_time}")
         # send_test = webhook_test.send_text(f"重启，必胜！\n {beijing_time}")
