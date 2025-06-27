@@ -295,7 +295,7 @@ def lambda_handler(event, context):
                     continue
             if len(bid_total) >= 20:
                 logger.info(f"len：{len(bid_total)}")
-                bid_total = bid_total[:-6]
+                bid_total = bid_total[-6:]
                 logger.info(f"len：{len(bid_total)}")
             beijing_time = datetime.now(timezone(timedelta(hours=8)))
             continue
