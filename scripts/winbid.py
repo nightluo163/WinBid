@@ -55,7 +55,7 @@ file_handler = RotatingFileHandler(
 
 # 配置重试策略
 retry_strategy = Retry(
-    total=5,                              # 总尝试次数（含首次请求）[2,4](@ref)
+    total=20,                              # 总尝试次数（含首次请求）[2,4](@ref)
     backoff_factor=1,                     # 指数退避间隔：{backoff_factor} * 2^(n-1)秒[4,5](@ref)
     status_forcelist=[500, 502, 503, 504],# 遇到这些状态码自动重试[3,5](@ref)
     allowed_methods=["GET", "POST"]       # 仅对指定HTTP方法重试[4](@ref)
@@ -151,7 +151,7 @@ def ct_search(keyword, start_time):
                 url=api_url,
                 headers=headers,
                 json=payload,
-                timeout=120
+                timeout=60
             )
             response.raise_for_status()              
             data = response.json()
@@ -217,7 +217,7 @@ def tower_search(keyword, start_time):
                 url=api_url,
                 headers=headers,
                 json=payload,
-                timeout=120
+                timeout=60
             )
             response.raise_for_status()
                 
