@@ -341,9 +341,9 @@ def lambda_handler(event, context):
                 if result_tower is not None:
                     result = result + result_tower
 
-                result_uc = uc_search(keyword, start_time)
-                if result_uc is not None:
-                    result = result + result_uc
+                # result_uc = uc_search(keyword, start_time)
+                # if result_uc is not None:
+                #     result = result + result_uc
                     
                 message = ''
                 for msg in result:
