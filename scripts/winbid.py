@@ -143,7 +143,6 @@ def ct_search(keyword, start_time):
             "pageSize": 10,
             "pageNum": 1,
             "type": type,
-            "creatorName": "",
             "provinceCode": ""
         }
 
@@ -243,6 +242,70 @@ def tower_search(keyword, start_time):
             return None
         
     return bid_list
+
+def uc_search(keyword, start_time):
+    session = requests.Session()
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+    session.mount("https://", adapter)
+    home_url = "http://www.chinaunicombidding.cn/api/v1/bizAnno/getAnnoList?Wlfknewu=W0k9YalqEEx0i_LSfYfLYyyc09sYkIQFGb_O.XMN9amTdA_BXL43EqnXiOBb.KXBDJ13j6zP.jAvoFNFTrENOAVjvuPnaIiI"
+    try:
+        home_response = session.post(home_url)
+        home_response.raise_for_status()
+
+    except Exception as e:
+            logger.error(f"联通，主页请求失败: {str(e)}")
+            return None
+
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+        'Content-Type': 'application/json;charset=UTF-8',
+    }
+
+    type_list = ["BizAnnoVoMtable"]
+    
+    api_url = "http://www.chinaunicombidding.cn/api/v1/bizAnno/getAnnoList?Wlfknewu=W0k9YalqEEx0i_LSfYfLYyyc09sYkIQFGb_O.XMN9amTdA_BXL43EqnXiOBb.KXBDJ13j6zP.jAvoFNFTrENOAVjvuPnaIiI"
+    bid_list = []
+    for i in range(len(type_list)):
+        type_id = type_list[i]
+        docType = docType_list[i]
+        payload = {
+            "annoName": keyword,
+            "modeNo": type_id
+        }
+
+        try:
+            response = session.post(
+                url=api_url,
+                headers=headers,
+                json=payload,
+                timeout=60
+            )
+            response.raise_for_status()
+                
+            data = response.json()
+            
+            data_list = data['data']['records']
+            for list in data_list:
+                if list['procurementType'] == "服务":
+                    format_str = "%Y-%m-%d %H:%M:%S"
+                    bid_time = datetime.strptime(list['createDate'], format_str)
+                    if bid_time >= start_time.replace(tzinfo=None):
+                        bid = {
+                            "标题": list['annoName'],
+                            "类型": list['annoType'],
+                            "链接":  f"http://www.chinaunicombidding.cn/bidInformation/detail?id={list['id']}"
+                        }
+                        bid_list.append(bid)
+                    else:
+                        break
+                else:
+                    continue
+
+        except requests.exceptions.HTTPError as e:
+            logger.error(f"联通，API请求失败: 状态码 {response.status_code}, 响应内容: {response.text}")
+            return None
+        
+    return bid_list
     
 
 def lambda_handler(event, context):
@@ -269,10 +332,19 @@ def lambda_handler(event, context):
             logger.info(f"start_time: {start_time}")
             # send_test = webhook_test.send_text(f"start_time: {start_time}")
             for keyword in keyword_list:
-                result_1 = ct_search(keyword, start_time)
-                result_2 = tower_search(keyword, start_time)
-                result = result_1 + result_2
-                # result = result_2
+                result = []                
+                result_ct = ct_search(keyword, start_time)
+                if result_ct is not None:
+                    result = result + result_ct
+                    
+                result_tower = tower_search(keyword, start_time)
+                if result_tower is not None:
+                    result = result + result_tower
+
+                result_uc = uc_search(keyword, start_time)
+                if result_uc is not None:
+                    result = result + result_uc
+                    
                 message = ''
                 for msg in result:
                     if msg not in bid_total:
