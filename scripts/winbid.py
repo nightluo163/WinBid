@@ -249,7 +249,7 @@ def uc_search(keyword, start_time):
     session.mount("https://", adapter)
     home_url = "http://www.chinaunicombidding.cn/api/v1/bizAnno/getAnnoList?Wlfknewu=W0k9YalqEEx0i_LSfYfLYyyc09sYkIQFGb_O.XMN9amTdA_BXL43EqnXiOBb.KXBDJ13j6zP.jAvoFNFTrENOAVjvuPnaIiI"
     try:
-        home_response = session.post(home_url)
+        home_response = session.get(home_url)
         home_response.raise_for_status()
 
     except Exception as e:
