@@ -35,7 +35,7 @@ jobs:
         KEY_MAIN: ${{ secrets.KEY_MAIN }} 
         KEY_OTHERS: ${{ secrets.KEY_OTHERS }} 
         KEY_NOT: ${{ secrets.KEY_NOT }} 
-      run: python scripts/Bid_test.py
+      run: python scripts/winbid.py
     
     - name: Archive logs
       uses: actions/upload-artifact@v4
