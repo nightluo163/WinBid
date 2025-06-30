@@ -374,7 +374,7 @@ def lambda_handler(event, context):
             continue
 
         now_time = beijing_time.strftime("%Y-%m-%d %H:%M:%S")
-        # time_send = webhook_test.send_text(f"归零，更新！\n{now_time}")
+        time_send = webhook_test.send_text(f"归零，更新！\n{now_time}")
         logger.info(f"归零，更新！\n{now_time}")
     
     except Exception as e:
