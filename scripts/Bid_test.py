@@ -115,6 +115,7 @@ class WeComWebhookTest:
 def ct_search(keyword, start_time):
     session = requests.Session()
     adapter = HTTPAdapter(max_retries=retry_strategy)
+    logger.info(f"test")
     session.mount("https://", adapter)
     home_url = "https://caigou.chinatelecom.com.cn"
     try:
@@ -333,7 +334,7 @@ def lambda_handler(event, context):
             # send_test = webhook_test.send_text(f"start_time: {start_time}")
             for keyword in keyword_list:
                 result = []    
-                logger.info(f"keyword: {keyword}")
+                # logger.info(f"keyword: {keyword}")
                 result_ct = ct_search(keyword, start_time)
                 logger.info(f"result_ct: {result_ct}")
                 if result_ct is not None:
