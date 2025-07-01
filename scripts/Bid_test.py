@@ -120,7 +120,7 @@ def ct_search(keyword, start_time):
     try:
         home_response = session.get(home_url)
         home_response.raise_for_status()
-        logger.info(f"test")
+        logger.info({home_response})
 
     except Exception as e:
             logger.error(f"阳光采购网，主页请求失败: {str(e)}")
