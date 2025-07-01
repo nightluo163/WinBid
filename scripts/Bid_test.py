@@ -328,7 +328,7 @@ def lambda_handler(event, context):
         bid_total = []
         while beijing_time >= end_time:
             # start_time = beijing_time - timedelta(days=2)
-            start_time = beijing_time - timedelta(minutes=100)
+            start_time = beijing_time - timedelta(minutes=110)
             logger.info(f"start_time: {start_time}")
             # send_test = webhook_test.send_text(f"start_time: {start_time}")
             for keyword in keyword_list:
