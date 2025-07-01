@@ -366,7 +366,7 @@ def lambda_handler(event, context):
                 
                 if message != '':
                     message = message[:-2]
-                    result = webhook.send_text(message)
+                    # result = webhook.send_text(message)
                     result_test = webhook_test.send_text(message)
                     # result_ot = webhook_ot.send_text(message)
                     # logger.info(f"关键词：{keyword}\n消息详情：{message}")
