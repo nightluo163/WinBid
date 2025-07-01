@@ -316,9 +316,9 @@ def lambda_handler(event, context):
     webhook = WeComWebhook()
     webhook_test = WeComWebhookTest()
     logger.info("【调试】Webhook初始化成功")
-    test_msg = webhook.send_text("'code':500, 'msg':'拒绝访问系统'")
-    test_msg = webhook.send_text("ERROR-全局异常:Exceeded 30redirects")
-    test_msg = webhook.send_text("零信任平台检测到您无应用访问权限，基于安全合规要求，您的访问被阻断。\n您可联系管理员申请权限，零信任安全服务平台将全程保护您的访问安全。")
+    # test_msg = webhook.send_text("'code':500, 'msg':'拒绝访问系统'")
+    # test_msg = webhook.send_text("ERROR-全局异常:Exceeded 30redirects")
+    # test_msg = webhook.send_text("零信任平台检测到您无应用访问权限，基于安全合规要求，您的访问被阻断。\n您可联系管理员申请权限，零信任安全服务平台将全程保护您的访问安全。")
     try:
         utc_now = datetime.now(timezone.utc)
         beijing_time = utc_now.astimezone(timezone(timedelta(hours=8)))        
