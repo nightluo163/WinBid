@@ -344,7 +344,9 @@ def lambda_handler(event, context):
                 # result_uc = uc_search(keyword, start_time)
                 # if result_uc is not None:
                 #     result = result + result_uc
-                    
+
+                logger.info(f"result: {result}")
+                
                 message = ''
                 for msg in result:
                     if msg not in bid_total:
