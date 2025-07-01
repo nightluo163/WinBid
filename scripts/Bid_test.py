@@ -120,8 +120,7 @@ def ct_search(keyword, start_time):
     try:
         home_response = session.get(home_url)
         home_response.raise_for_status()
-        logger.info({home_response})
-
+        
     except Exception as e:
             logger.error(f"阳光采购网，主页请求失败: {str(e)}")
             return None
@@ -154,6 +153,7 @@ def ct_search(keyword, start_time):
                 json=payload,
                 timeout=60
             )
+            logger.info(f"response:{response}")
             response.raise_for_status()              
             data = response.json()
             data_list = data['data']['list']
