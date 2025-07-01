@@ -332,8 +332,10 @@ def lambda_handler(event, context):
             logger.info(f"start_time: {start_time}")
             # send_test = webhook_test.send_text(f"start_time: {start_time}")
             for keyword in keyword_list:
-                result = []                
+                result = []    
+                logger.info(f"keyword: {keyword}")
                 result_ct = ct_search(keyword, start_time)
+                logger.info(f"result_ct: {result_ct}")
                 if result_ct is not None:
                     result = result + result_ct
                     
