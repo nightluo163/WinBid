@@ -333,9 +333,9 @@ def lambda_handler(event, context):
             # send_test = webhook_test.send_text(f"start_time: {start_time}")
             for keyword in keyword_list:
                 result = []                
-                result_ct = ct_search(keyword, start_time)
-                if result_ct is not None:
-                    result = result + result_ct
+                # result_ct = ct_search(keyword, start_time)
+                # if result_ct is not None:
+                    # result = result + result_ct
                     
                 result_tower = tower_search(keyword, start_time)
                 if result_tower is not None:
