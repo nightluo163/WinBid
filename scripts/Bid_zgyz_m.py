@@ -151,7 +151,7 @@ def zgyz_search(keyword, start_time):
             bid_time = datetime.strptime(list['time'], format_str).date()
             if bid_time >= start_time:
                 bid = {
-                    "标题": list['title'],
+                    "标题": re.sub(r'</?b>|/', '', list['title']),
                     "链接":  f"{home_url}{list['url']}"
                 }
                 bid_list.append(bid)
@@ -200,7 +200,7 @@ def lambda_handler(event, context):
                 
                 if message != '':
                     message = message[:-2]
-                    result = webhook.send_text(message)
+                    # result = webhook.send_text(message)
                     result_test = webhook_test.send_text(message)
                     # logger.info(f"【调试】发送结果: {json.dumps(result)}")
                     # logger.info(f"【调试】发送结果: {json.dumps(result_test)}")
