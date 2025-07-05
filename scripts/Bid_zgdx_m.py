@@ -215,17 +215,13 @@ def lambda_handler(event, context):
                     result_test = webhook_test.send_text(message)
                     # logger.info(f"【调试】发送结果: {json.dumps(result)}")
                     # logger.info(f"【调试】发送结果: {json.dumps(result_test)}")
-                    time.sleep(10)
+                    time.sleep(20)
                 else:
-                    time.sleep(10)
+                    time.sleep(20)
                     continue
         except Exception as e:
             logger.error(f"全局异常: {str(e)}")
             error_send = webhook_test.send_text(f"全局异常: {str(e)}")
-            return {
-                'statusCode': 500,
-                'body': json.dumps({'error': str(e)})
-            }
             
         if len(bid_total) >= 20:
             bid_total = bid_total[-6:]
