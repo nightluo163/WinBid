@@ -185,7 +185,7 @@ def lambda_handler(event, context):
     send_test = webhook_test.send_text(f"重启，必胜！\n {beijing_time}")
     logger.info(f"重启，必胜！\n {beijing_time}")
 
-    start_time = beijing_time.data()
+    start_time = beijing_time.date()
     format_str = "%Y-%m-%d"
     start_time = datetime.strptime(start_time, format_str)
     logger.info(f"start_time: {start_time}")
