@@ -11,11 +11,23 @@ import time
 from logging.handlers import RotatingFileHandler
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+from fake_useragent import UserAgent
 
-keyword_main = ["培训", "竞赛", "赋能", "会务", "营销"]
-keyword_list = ["交流活动", "辅助服务", "训战", "会议活动", "会议服务", "会展", "论坛", "实战", "服务支撑", "服务提质", "客户价值提升", "训练营"]
-not_list = ["租赁", "设备采购", "办公室", "材料", "培训中心"]
-not_list = not_list + keyword_main
+try:
+    response = requests.get("https://api.ipify.org", timeout=10)
+    print(f"当前代理IP: {response.text}") 
+except Exception as e:
+    print(f"代理请求失败: {e}")
+    
+with open('bid.json', 'r', encoding='utf-8') as f:
+    bid = json.load(f) 
+    keyword_main = bid["keyword"]["main"]
+    keyword_others = bid["keyword"]["others"]
+    keyword_list = keyword_main + keyword_others
+    not_list = bid["keyword"]["not"]
+
+key = os.getenv("key_main")
+key_test = os.getenv("key_test")
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
@@ -52,9 +64,6 @@ retry_strategy = Retry(
     status_forcelist=[500, 502, 503, 504],# 遇到这些状态码自动重试[3,5](@ref)
     allowed_methods=["GET", "POST"]       # 仅对指定HTTP方法重试[4](@ref)
 )
-
-key = os.getenv("key_main")
-key_test = os.getenv("key_test")
 
 class WeComWebhook:  
     BASE_URL = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key={key}"
@@ -100,93 +109,11 @@ class WeComWebhookTest:
             logger.error(f"消息发送失败: {str(e)}")
             return {"errcode": -1, "errmsg": "请求异常"}
 
-# class WeComWebhookOT:  
-#     BASE_URL = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key={key}"
-#     def __init__(self):
-#         self.webhook_key = key_ot
-#         if not self.webhook_key:
-#             logger.error("未检测到环境变量 WECOM_WEBHOOK_KEY_TEST")
-#             raise ValueError("缺失密钥")
-
-#     def send_text(self, content: str) -> dict:
-#         payload = {"msgtype": "text", "text": {"content": content}}
-#         try:
-#             response = requests.post(
-#                 self.BASE_URL.format(key=self.webhook_key),
-#                 json=payload,
-#                 timeout=60
-#             )
-#             response.raise_for_status()
-#             return response.json()
-#         except Exception as e:
-#             logger.error(f"消息发送失败: {str(e)}")
-#             return {"errcode": -1, "errmsg": "请求异常"}
-            
-def ct_search(keyword, start_time):
-    session = requests.Session()
-    adapter = HTTPAdapter(max_retries=retry_strategy)
-    session.mount("https://", adapter)
-    home_url = "https://caigou.chinatelecom.com.cn"
-    try:
-        home_response = session.get(home_url)
-        home_response.raise_for_status()
-
-    except Exception as e:
-            logger.error(f"阳光采购网，主页请求失败: {str(e)}")
-            return None
-
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
-        'Content-Type': 'application/json;charset=UTF-8',
-    }
-
-    payload_type = ["xi9s", "e2no", "e3erht", "ru7of", "e8vif", "ds3fd2s", "f1f7e", "n0eves", "ow7t", "th4gie", "s1x5e"]
-    type_list = ["6", "1", "3", "4", "5", "14", "3", "7", "2", "8", "7"]
+def get_random_user_agent():
+    ua = UserAgent()
+    return ua.random
     
-    api_url = "https://caigou.chinatelecom.com.cn/portal/base/announcementJoin/queryListNew"
-    bid_list = []
-    for i in range(len(payload_type)):
-        type = payload_type[i]
-        type_id = type_list[i]
-        payload = {
-            "title": keyword,
-            "pageSize": 10,
-            "pageNum": 1,
-            "type": type,
-            "creatorName": "",
-            "provinceCode": ""
-        }
-
-        try:
-            response = session.post(
-                url=api_url,
-                headers=headers,
-                json=payload,
-                timeout=120
-            )
-            response.raise_for_status()              
-            data = response.json()
-            data_list = data['data']['list']
-            for list in data_list:
-                format_str = "%Y-%m-%d %H:%M:%S"
-                bid_time = datetime.strptime(list['createDate'], format_str)
-                if bid_time >= start_time.replace(tzinfo=None):
-                    bid = {
-                        "标题": list['docTitle'],
-                        "类型": list['docType'],
-                        "链接":  f"{home_url}/DeclareDetails?id={list['docId']}&type={type_id}&docTypeCode={list['docTypeCode']}&securityViewCode={list['securityViewCode']}"
-                    }
-                    bid_list.append(bid)
-                else:
-                    break
-
-        except requests.exceptions.HTTPError as e:
-            logger.error(f"阳光采购网，API请求失败: 状态码 {response.status_code}, 响应内容: {response.text}")
-            return None
-    
-    return bid_list
-    
-def tower_search(keyword, start_time):
+def zgtt_search(keyword, start_time):
     session = requests.Session()
     adapter = HTTPAdapter(max_retries=retry_strategy)
     session.mount("https://", adapter)
@@ -200,7 +127,7 @@ def tower_search(keyword, start_time):
             return None
 
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
+        'User-Agent': get_random_user_agent(),
         'Content-Type': 'application/json;charset=UTF-8',
     }
 
@@ -261,22 +188,22 @@ def lambda_handler(event, context):
     webhook = WeComWebhook()
     webhook_test = WeComWebhookTest()
     logger.info("【调试】Webhook初始化成功")
-    try:
-        utc_now = datetime.now(timezone.utc)
-        beijing_time = utc_now.astimezone(timezone(timedelta(hours=8)))        
-        end_time = beijing_time + timedelta(hours=5.8)
-        send_test = webhook_test.send_text(f"重启，必胜！\n {beijing_time}")
-        logger.info(f"重启，必胜！\n {beijing_time}")
-        
-        bid_total = []
-        while beijing_time <= end_time:
-            start_time = beijing_time - timedelta(days=2)
-            # start_time = beijing_time - timedelta(minutes=15)
+    
+    utc_now = datetime.now(timezone.utc)
+    beijing_time = utc_now.astimezone(timezone(timedelta(hours=8)))        
+    end_time = beijing_time + timedelta(hours=5.1)
+    logger.info(f"end_time: {end_time}")
+    send_test = webhook_test.send_text(f"重启，必胜！\n {beijing_time}")
+    logger.info(f"重启，必胜！\n {beijing_time}")
+    
+    bid_total = []
+    while beijing_time <= end_time:
+        try:
+            # start_time = beijing_time - timedelta(days=2)
+            start_time = beijing_time - timedelta(minutes=10)
             logger.info(f"start_time: {start_time}")
             for keyword in keyword_list:
-                result_1 = ct_search(keyword, start_time)
-                result_2 = tower_search(keyword, start_time)
-                result = result_1 + result_2
+                result = zgtt_search(keyword, start_time)
                 message = ''
                 for msg in result:
                     if msg not in bid_total:
@@ -291,23 +218,28 @@ def lambda_handler(event, context):
                     message = message[:-2]
                     # result = webhook.send_text(message)
                     result_test = webhook_test.send_text(message)
-                    logger.info(f"关键词：{keyword}\n消息详情：{message}")
-                    logger.info(f"【调试】发送结果: {json.dumps(result)}")
+                    # logger.info(f"【调试】发送结果: {json.dumps(result)}")
+                    # logger.info(f"【调试】发送结果: {json.dumps(result_test)}")
+                    time.sleep(10)
                 else:
+                    time.sleep(10)
                     continue
-            beijing_time = datetime.now(timezone(timedelta(hours=8)))
+        except Exception as e:
+            logger.error(f"全局异常: {str(e)}")
+            error_send = webhook_test.send_text(f"全局异常: {str(e)}")
+            return {
+                'statusCode': 500,
+                'body': json.dumps({'error': str(e)})
+            }
+            
+        if len(bid_total) >= 20:
+            bid_total = bid_total[-6:]
+            
+        beijing_time = datetime.now(timezone(timedelta(hours=8)))
 
-        now_time = beijing_time.strftime("%Y-%m-%d %H:%M:%S")
-        time_send = webhook_test.send_text(f"归零，更新！\n{now_time}")
-        logger.info(f"归零，更新！\n{now_time}")
-    
-    except Exception as e:
-        logger.error(f"全局异常: {str(e)}")
-        error_send = webhook_test.send_text(f"全局异常: {str(e)}")
-        return {
-            'statusCode': 500,
-            'body': json.dumps({'error': str(e)})
-        }
+    now_time = beijing_time.strftime("%Y-%m-%d %H:%M:%S")
+    time_send = webhook_test.send_text(f"归零，更新！\n{now_time}")
+    logger.info(f"归零，更新！\n{now_time}")
     
 if __name__ == "__main__":
     func = lambda_handler("", "")
