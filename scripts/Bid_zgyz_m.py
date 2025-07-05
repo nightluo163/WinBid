@@ -148,7 +148,7 @@ def zgyz_search(keyword, start_time):
         for list in data_list:
             logger.info(f"list: {list}")
             format_str = "%Y-%m-%d"
-            bid_time = datetime.strptime(list['time'], format_str)
+            bid_time = datetime.strptime(list['time'], format_str).date()
             if bid_time >= start_time:
                 bid = {
                     "标题": list['title'],
