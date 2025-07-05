@@ -12,12 +12,6 @@ from logging.handlers import RotatingFileHandler
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from fake_useragent import UserAgent
-
-try:
-    response = requests.get("https://api.ipify.org", timeout=10)
-    logger.info(f"当前代理IP: {response.text}")
-except Exception as e:
-    logger.info(f"代理请求失败: {e}")
     
 with open('scripts/bid.json', 'r', encoding='utf-8') as f:
     bid = json.load(f) 
@@ -65,6 +59,12 @@ retry_strategy = Retry(
     allowed_methods=["GET", "POST"]       # 仅对指定HTTP方法重试[4](@ref)
 )
 
+try:
+    response = requests.get("https://api.ipify.org", timeout=10)
+    logger.info(f"当前代理IP: {response.text}")
+except Exception as e:
+    logger.info(f"代理请求失败: {e}")
+    
 class WeComWebhook:  
     BASE_URL = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key={key}"
     def __init__(self):
