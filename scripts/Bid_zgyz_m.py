@@ -178,9 +178,9 @@ def lambda_handler(event, context):
     send_test = webhook_test.send_text(f"重启，必胜！\n {beijing_time}")
     logger.info(f"重启，必胜！\n {beijing_time}")
 
-    start_time = beijing_time - timedelta(days=2)
-    start_time = start_time.date()
-    # start_time = beijing_time.date()
+    # start_time = beijing_time - timedelta(days=2)
+    # start_time = start_time.date()
+    start_time = beijing_time.date()
     logger.info(f"start_time: {start_time}")
 
     bid_total = []
@@ -216,8 +216,8 @@ def lambda_handler(event, context):
                 'body': json.dumps({'error': str(e)})
             }
             
-        if len(bid_total) >= 20:
-            bid_total = bid_total[-6:]
+        if len(bid_total) >= 40:
+            bid_total = bid_total[-20:]
             
         beijing_time = datetime.now(timezone(timedelta(hours=8)))
 
