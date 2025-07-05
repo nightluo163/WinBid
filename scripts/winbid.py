@@ -62,10 +62,9 @@ retry_strategy = Retry(
     allowed_methods=["GET", "POST"]       # 仅对指定HTTP方法重试[4](@ref)
 )
 
-key = "e36d9f43-4442-48d8-b864-18a084a85840"
-key_test = "04c30c93-6d63-4f65-b58b-8ad649dcdb54"
-# key = os.getenv("BID_WIN")
-# key_test = os.getenv("BID_TEST")
+
+key = os.getenv("BID_WIN")
+key_test = os.getenv("BID_TEST")
 # key_ot = os.getenv("BID_OT")
 
 class WeComWebhook:  
