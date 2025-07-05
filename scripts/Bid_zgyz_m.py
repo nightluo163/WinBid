@@ -144,8 +144,9 @@ def zgyz_search(keyword, start_time):
         response.raise_for_status()              
         data = response.json()
         data_list = data['data'][:10]
-        logger.info(f"data_list: {data_list}")
+        logger.info(f"len(data_list): {len(data_list)}")
         for list in data_list:
+            logger.info(f"list: {list}")
             format_str = "%Y-%m-%d"
             bid_time = datetime.strptime(list['time'], format_str)
             if bid_time == start_time:
