@@ -121,6 +121,7 @@ def zgyz_search(keyword, start_time):
     try:
         home_response = session.get(home_url)
         home_response.raise_for_status()
+        logger.info(f"home_response！\n {home_response}")
 
     except Exception as e:
             logger.error(f"中国邮政，主页请求失败: {str(e)}")
