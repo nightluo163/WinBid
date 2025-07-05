@@ -15,9 +15,9 @@ from fake_useragent import UserAgent
 
 try:
     response = requests.get("https://api.ipify.org", timeout=10)
-    print(f"当前代理IP: {response.text}") 
+    logger.info(f"当前代理IP: {response.text}")
 except Exception as e:
-    print(f"代理请求失败: {e}")
+    logger.info(f"代理请求失败: {e}")
     
 with open('scripts/bid.json', 'r', encoding='utf-8') as f:
     bid = json.load(f) 
