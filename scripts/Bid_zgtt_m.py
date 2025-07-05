@@ -19,7 +19,7 @@ try:
 except Exception as e:
     print(f"代理请求失败: {e}")
     
-with open('bid.json', 'r', encoding='utf-8') as f:
+with open('/scripts/bid.json', 'r', encoding='utf-8') as f:
     bid = json.load(f) 
     keyword_main = bid["keyword"]["main"]
     keyword_others = bid["keyword"]["others"]
