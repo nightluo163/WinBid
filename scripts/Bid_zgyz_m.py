@@ -2,7 +2,7 @@ import os
 import json
 import logging
 import requests
-from datetime import datetime, timezone, timedelta, data
+from datetime import datetime, timezone, timedelta
 from bs4 import BeautifulSoup
 import re
 import io
@@ -185,7 +185,9 @@ def lambda_handler(event, context):
     send_test = webhook_test.send_text(f"重启，必胜！\n {beijing_time}")
     logger.info(f"重启，必胜！\n {beijing_time}")
 
-    start_time = date.today()
+    start_time = beijing_time.data()
+    format_str = "%Y-%m-%d"
+    start_time = datetime.strptime(start_time, format_str)
     logger.info(f"start_time: {start_time}")
 
     bid_total = []
