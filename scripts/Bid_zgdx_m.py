@@ -152,7 +152,6 @@ def zgdx_search(keyword, start_time):
                 url=api_url,
                 headers=headers,
                 json=payload,
-                proxies=proxies,
                 timeout=60
             )
             
