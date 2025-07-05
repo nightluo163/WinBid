@@ -152,6 +152,7 @@ def zgyz_search(keyword, start_time):
         
         response.raise_for_status()              
         data = response.json()
+        logger.info(f"data！\n {data}")
         data_list = data['data'][:10]
         for list in data_list:
             format_str = "%Y-%m-%d"
