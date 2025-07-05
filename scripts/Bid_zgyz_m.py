@@ -165,9 +165,9 @@ def zgyz_search(keyword, start_time):
             else:
                 break
 
-        except requests.exceptions.HTTPError as e:
-            logger.error(f"中国邮政，API请求失败: 状态码 {response.status_code}, 响应内容: {response.text}")
-            return None
+    except requests.exceptions.HTTPError as e:
+        logger.error(f"中国邮政，API请求失败: 状态码 {response.status_code}, 响应内容: {response.text}")
+        return None
     
     return bid_list
     
