@@ -186,8 +186,6 @@ def lambda_handler(event, context):
     logger.info(f"重启，必胜！\n {beijing_time}")
 
     start_time = beijing_time.date()
-    format_str = "%Y-%m-%d"
-    start_time = datetime.strptime(start_time, format_str)
     logger.info(f"start_time: {start_time}")
 
     bid_total = []
