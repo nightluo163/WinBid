@@ -11,6 +11,7 @@ import time
 from logging.handlers import RotatingFileHandler
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+from urllib.parse import quote
 from fake_useragent import UserAgent
   
 with open('scripts/bid.json', 'r', encoding='utf-8') as f:
@@ -121,7 +122,6 @@ def zgyz_search(keyword, start_time):
     try:
         home_response = session.get(home_url)
         home_response.raise_for_status()
-        logger.info(f"home_response！\n {home_response}")
 
     except Exception as e:
             logger.error(f"中国邮政，主页请求失败: {str(e)}")
@@ -132,22 +132,12 @@ def zgyz_search(keyword, start_time):
         'Content-Type': 'application/json;charset=UTF-8',
     }
     
-    api_url = "https://iframe.chinapost.com.cn/jsp/util/Search.jsp?community=ChinaPostJT&lucenelist=1813902036"
+    api_url = f"https://iframe.chinapost.com.cn/jsp/util/Search.jsp?community=ChinaPostJT&lucenelist=1813902036&q={quote(keyword, encoding='utf-8')}"
     bid_list = []
-    params = {
-        "community": "ChinaPostJT",
-        "lucenelist": "1813902036"
-    }
-    data = {
-      "q": keyword
-    }
-
     try:
         response = session.post(
             url=api_url,
             headers=headers,
-            params=params,
-            data=data,
             timeout=60
         )
         
