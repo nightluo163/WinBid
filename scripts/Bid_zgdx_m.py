@@ -53,7 +53,7 @@ file_handler = RotatingFileHandler(
 
 # 配置重试策略
 retry_strategy = Retry(
-    total=5,                              # 总尝试次数（含首次请求）[2,4](@ref)
+    total=3,                              # 总尝试次数（含首次请求）[2,4](@ref)
     backoff_factor=1,                     # 指数退避间隔：{backoff_factor} * 2^(n-1)秒[4,5](@ref)
     status_forcelist=[500, 502, 503, 504],# 遇到这些状态码自动重试[3,5](@ref)
     allowed_methods=["GET", "POST"]       # 仅对指定HTTP方法重试[4](@ref)
@@ -123,7 +123,7 @@ def zgdx_search(keyword, start_time):
         home_response.raise_for_status()
 
     except Exception as e:
-            logger.error(f"阳光采购网，主页请求失败: {str(e)}")
+            logger.error(f"中国电信，主页请求失败: {str(e)}")
             return None
 
     headers = {
@@ -172,7 +172,7 @@ def zgdx_search(keyword, start_time):
                     break
 
         except requests.exceptions.HTTPError as e:
-            logger.error(f"阳光采购网，API请求失败: 状态码 {response.status_code}, 响应内容: {response.text}")
+            logger.error(f"中国电信，API请求失败: 状态码 {response.status_code}, 响应内容: {response.text}")
             return None
     
     return bid_list
@@ -195,7 +195,7 @@ def lambda_handler(event, context):
     while beijing_time <= end_time:
         try:
             # start_time = beijing_time - timedelta(days=2)
-            start_time = beijing_time - timedelta(minutes=10)
+            start_time = beijing_time - timedelta(minutes=15)
             logger.info(f"start_time: {start_time}")
             for keyword in keyword_list:
                 result = zgdx_search(keyword, start_time)
@@ -220,7 +220,7 @@ def lambda_handler(event, context):
                     time.sleep(20)
                     continue
         except Exception as e:
-            logger.error(f"全局异常: {str(e)}")
+            logger.error(f"中国电信，全局异常: {str(e)}")
             error_send = webhook_test.send_text(f"全局异常: {str(e)}")
             
         if len(bid_total) >= 20:
