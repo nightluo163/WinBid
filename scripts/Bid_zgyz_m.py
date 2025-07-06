@@ -54,7 +54,7 @@ file_handler = RotatingFileHandler(
 
 # 配置重试策略
 retry_strategy = Retry(
-    total=5,                              # 总尝试次数（含首次请求）[2,4](@ref)
+    total=3,                              # 总尝试次数（含首次请求）[2,4](@ref)
     backoff_factor=1,                     # 指数退避间隔：{backoff_factor} * 2^(n-1)秒[4,5](@ref)
     status_forcelist=[500, 502, 503, 504],# 遇到这些状态码自动重试[3,5](@ref)
     allowed_methods=["GET", "POST"]       # 仅对指定HTTP方法重试[4](@ref)
@@ -171,7 +171,7 @@ def lambda_handler(event, context):
     
     utc_now = datetime.now(timezone.utc)
     beijing_time = utc_now.astimezone(timezone(timedelta(hours=8)))        
-    end_time = beijing_time + timedelta(hours=5.1)
+    end_time = beijing_time + timedelta(hours=5)
     logger.info(f"end_time: {end_time}")
     send_test = webhook_test.send_text(f"重启，必胜！\n {beijing_time}")
     logger.info(f"重启，必胜！\n {beijing_time}")
@@ -208,7 +208,7 @@ def lambda_handler(event, context):
                     time.sleep(10)
                     continue
         except Exception as e:
-            logger.error(f"全局异常: {str(e)}")
+            logger.error(f"中国邮政，全局异常: {str(e)}")
             error_send = webhook_test.send_text(f"全局异常: {str(e)}")
             
         if len(bid_total) >= 40:
