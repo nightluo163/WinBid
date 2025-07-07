@@ -209,7 +209,7 @@ def lambda_handler(event, context):
                     continue
         except Exception as e:
             logger.error(f"中国邮政，全局异常: {str(e)}")
-            error_send = webhook_test.send_text(f"全局异常: {str(e)}")
+            error_send = webhook_test.send_text(f"中国邮政，全局异常: {str(e)}")
             
         if len(bid_total) >= 40:
             bid_total = bid_total[-20:]
