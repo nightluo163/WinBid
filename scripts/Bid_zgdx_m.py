@@ -195,7 +195,7 @@ def lambda_handler(event, context):
     while beijing_time <= end_time:
         try:
             # start_time = beijing_time - timedelta(days=2)
-            start_time = beijing_time - timedelta(minutes=15)
+            start_time = beijing_time - timedelta(minutes=30)
             logger.info(f"start_time: {start_time}")
             for keyword in keyword_list:
                 result = zgdx_search(keyword, start_time)
