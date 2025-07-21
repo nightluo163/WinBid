@@ -200,7 +200,7 @@ def lambda_handler(event, context):
                 if message != '':
                     message = message[:-2]
                     result = webhook.send_text(message)
-                    result_test = webhook_test.send_text(message)
+                    # result_test = webhook_test.send_text(message)
                     # logger.info(f"【调试】发送结果: {json.dumps(result)}")
                     # logger.info(f"【调试】发送结果: {json.dumps(result_test)}")
                     time.sleep(5)
