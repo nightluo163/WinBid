@@ -135,7 +135,7 @@ def search(keyword, start_time):
     type_list = ["2", "45"]
     docType_list = ["采购公告", "候选人及结果公示"]
     
-    api_url = f"https://www.ebidding.com/.rest/delivery/announcement/?searchContent%5Blike%5D={quote(keyword, encoding='utf-8')}"
+    api_url = f"https://www.ebidding.com/.rest/delivery/announcement/?searchContent%5Blike%5D={quote(keyword, encoding='utf-8')}&showDate%5Blte%5D=2025-07-21&availDate%5Bgte%5D=2025-01-21&orderBy=showDate%20desc&offset=0&limit=9"
     bid_list = []
     try:
         response = session.post(
