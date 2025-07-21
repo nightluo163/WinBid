@@ -11,6 +11,7 @@ import time
 from logging.handlers import RotatingFileHandler
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+from urllib.parse import quote
 from fake_useragent import UserAgent
     
 with open('scripts/bid.json', 'r', encoding='utf-8') as f:
