@@ -35,7 +35,7 @@ jobs:
       env:
         key_main: ${{ secrets.key_main }} 
         key_test: ${{ secrets.key_test }} 
-      run: python scripts/Bid_zgyz_m.py
+      run: python scripts/Bid_zgyz-.py
     
     - name: Archive logs
       uses: actions/upload-artifact@v4
