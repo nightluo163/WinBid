@@ -33,8 +33,9 @@ jobs:
         
     - name: Run Python script
       env:
-        key_main: ${{ secrets.key_main }} 
-        key_test: ${{ secrets.key_test }} 
+        key_main: ${{ secrets.KEY_MAIN }} 
+        key_jk: ${{ secrets.KEY_JK }} 
+        key_test: ${{ secrets.KEY_TEST }} 
       run: python scripts/Bid_zgtt_m.py
     
     - name: Archive logs
