@@ -131,6 +131,7 @@ def search(keyword, start_time):
     headers = {
         'User-Agent': get_random_user_agent(),
         'Content-Type': 'application/json;charset=UTF-8',
+        "Referer": "https://www.ebidding.com/e-portal/business.html",
     }
     
     # headers = {
