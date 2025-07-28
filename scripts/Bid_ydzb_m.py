@@ -149,9 +149,15 @@ def search(keyword, start_time):
         )
         response.raise_for_status()
         logger.info(f"response-type: {response.headers.get('Content-Type', '')}")
-        # soup = BeautifulSoup(response.text, 'html.parser')
+        soup = BeautifulSoup(response.text, 'html.parser')
+        logger.info(f"soup: {soup}")
         # title = soup.find('title').text if soup.title else "无标题"
         # logger.info(f"title: {title}")
+        table = soup.find('table', {'class': 'tender-table'})
+        logger.info(f"table: {table}")
+        tenders = []
+        for row in table.find_all('tr')[1:]:  # 跳过表头
+            cols = row.find_all('td')
         
         data = response.json()
         logger.info(f"data: {data}")
