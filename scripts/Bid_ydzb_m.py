@@ -153,7 +153,7 @@ def search(keyword, start_time):
         data_list = data['obj']['rows']
         for list in data_list:
             format_str = "%Y-%m-%d %H:%M:%S"
-            bid_time = datetime.strptime(list['publishedTime'], format_str).date()
+            bid_time = datetime.strptime(list['publishedTime'], format_str)
             if bid_time >= start_time.replace(tzinfo=None):
                 bid = {
                     "标题": list['title'],
