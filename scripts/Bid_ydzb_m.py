@@ -204,8 +204,8 @@ def lambda_handler(event, context):
                 
                 if message != '':
                     message = message[:-2]
-                    result = webhook.send_text(message)
-                    # result_test = webhook_test.send_text(message)
+                    # result = webhook.send_text(message)
+                    result_test = webhook_test.send_text(message)
                     time.sleep(5)
                 else:
                     time.sleep(5)
