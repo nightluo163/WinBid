@@ -148,7 +148,7 @@ def search(keyword, start_time):
             timeout=60
         )
         response.raise_for_status()
-        # logger.info(f"response: {response.text}")
+        logger.info(f"response: {response.text}")
         data = response.json()
         logger.info(f"data: {data}")
         data_list = data['obj']['rows']
@@ -211,9 +211,10 @@ def lambda_handler(event, context):
                 else:
                     time.sleep(5)
                     continue
+        
         except Exception as e:
             logger.error(f"全局异常: {str(e)}")
-            error_send = webhook_test.send_text(f"{com_key}，全局异常: {str(e)}")
+            # error_send = webhook_test.send_text(f"{com_key}，全局异常: {str(e)}")
             
         if len(bid_total) >= 20:
             bid_total = bid_total[-6:]
