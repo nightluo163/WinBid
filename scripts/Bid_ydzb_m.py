@@ -133,7 +133,7 @@ def search(keyword, start_time):
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
     }
     
-    api_url = f"http://www.youde.net/yd_zbcg/portal/getSearchArticle"
+    api_url = f"http://www.youde.net/yd_zbcg/portal/toSearchArticle"
     payload={
         "timeBegin": "",
         "timeEnd": "",
