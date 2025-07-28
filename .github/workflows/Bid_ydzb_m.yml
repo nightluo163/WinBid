@@ -1,7 +1,7 @@
-name: Run Bid_others
+name: Run Bid_ydzb_m
 on:
-  #schedule:
-    #- cron: '37 */4 * * *'
+  # schedule:
+    # - cron: '37 */4 * * *'
   workflow_dispatch:  # 允许手动触发
   repository_dispatch:  # 外部API触发
 env:
@@ -28,13 +28,15 @@ jobs:
         
     - name: Install dependencies
       run: |
-        pip install requests beautifulsoup4
+        pip install requests beautifulsoup4 fake_useragent
         pip freeze > requirements.txt  # 生成依赖清单
         
     - name: Run Python script
       env:
-        BID_WIN: ${{ secrets.BID_WIN }} 
-      run: python scripts/Bid_others.py
+        key_main: ${{ secrets.KEY_MAIN }} 
+        key_jk: ${{ secrets.KEY_JK }} 
+        key_test: ${{ secrets.KEY_TEST }} 
+      run: python scripts/Bid_ydzb_m.py
     
     - name: Archive logs
       uses: actions/upload-artifact@v4
