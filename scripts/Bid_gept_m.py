@@ -128,28 +128,28 @@ def search(keyword, start_time):
     #         logger.error(f"{com_key}，主页请求失败: {str(e)}")
     #         return None
 
-    # headers = {
-    #     'User-Agent': get_random_user_agent(),
-    #     'Content-Type': 'application/json;charset=UTF-8',
-    # }
-    
     headers = {
-        "Accept": "application/json, text/plain, */*",
-        "Accept-Encoding": "gzip, deflate, br, zstd",
-        "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,ar;q=0.7",
-        "Connection": "keep-alive",
-        "Cookie": "acw_tc=0ae5a7e317537052119707453e005c6a0c250c824a966b25f7d54bf2c7a0de; JSESSIONID=5A1F6860B29FC5A31ED71DF46A30AEA3",
-        "Host": "www.ebidding.com",
-        "Referer": "https://www.ebidding.com/e-portal/business.html",
-        "Sec-Ch-Ua": '"Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"',
-        "Sec-Ch-Ua-Mobile": "?0",
-        "Sec-Ch-Ua-Platform": '"Windows"',
-        "Sec-Fetch-Dest": "empty",
-        "Sec-Fetch-Mode": "cors",
-        "Sec-Fetch-Site": "same-origin",
-        "Token": "eyJOeXAiOiJKV1QiLCJhbGciOiJI.UZl1NIjEYjYW5kb20iOiI5MjY2ODkiLCJjbGllbnRJZCI6Ijk3MjYxNDc5NilslnNvdXJjZSIjE4My45LjIxmC43MiIsImV4cCI6MTc1MzcwnNTgyMXO.X2GzjZ6P1h5sxxsJscKOuWqeJ0lwOqtNxHfSCJsblAs",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+        'User-Agent': get_random_user_agent(),
+        'Content-Type': 'application/json;charset=UTF-8',
     }
+    
+    # headers = {
+    #     "Accept": "application/json, text/plain, */*",
+    #     "Accept-Encoding": "gzip, deflate, br, zstd",
+    #     "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,ar;q=0.7",
+    #     "Connection": "keep-alive",
+    #     "Cookie": "acw_tc=0ae5a7e317537052119707453e005c6a0c250c824a966b25f7d54bf2c7a0de; JSESSIONID=5A1F6860B29FC5A31ED71DF46A30AEA3",
+    #     "Host": "www.ebidding.com",
+    #     "Referer": "https://www.ebidding.com/e-portal/business.html",
+    #     "Sec-Ch-Ua": '"Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"',
+    #     "Sec-Ch-Ua-Mobile": "?0",
+    #     "Sec-Ch-Ua-Platform": '"Windows"',
+    #     "Sec-Fetch-Dest": "empty",
+    #     "Sec-Fetch-Mode": "cors",
+    #     "Sec-Fetch-Site": "same-origin",
+    #     "Token": "eyJOeXAiOiJKV1QiLCJhbGciOiJI.UZl1NIjEYjYW5kb20iOiI5MjY2ODkiLCJjbGllbnRJZCI6Ijk3MjYxNDc5NilslnNvdXJjZSIjE4My45LjIxmC43MiIsImV4cCI6MTc1MzcwnNTgyMXO.X2GzjZ6P1h5sxxsJscKOuWqeJ0lwOqtNxHfSCJsblAs",
+    #     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+    # }
     
     # api_url = f"https://www.ebidding.com/.rest/delivery/announcement/?isAirport%5Bnull%5D=true&searchContent%5Blike%5D={quote(keyword, encoding='utf-8')}&showDate%5Blte%5D=2025-07-21&availDate%5Bgte%5D=2025-01-28&orderBy=showDate%20desc&offset=0&limit=9"
     api_url = f"https://www.ebidding.com/.rest/delivery/announcement/"
