@@ -178,9 +178,9 @@ def lambda_handler(event, context):
     send_test = webhook_test.send_text(f"重启，必胜！{com_key}, {beijing_time}")
     logger.info(f"重启，必胜！\n {beijing_time}")
 
-    # start_time = beijing_time - timedelta(days=2)
-    # start_time = start_time.date()
-    start_time = beijing_time.date()
+    start_time = beijing_time - timedelta(days=4)
+    start_time = start_time.date()
+    # start_time = beijing_time.date()
     logger.info(f"start_time: {start_time}")
 
     bid_total = []
