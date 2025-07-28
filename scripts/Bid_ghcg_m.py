@@ -146,7 +146,7 @@ def search(keyword, start_time):
             timeout=60
         )
         response.raise_for_status()
-        logger.info(f"keyword:{keyword},response.text: {response.text}")
+        # logger.info(f"keyword:{keyword},response.text: {response.text}")
         soup = BeautifulSoup(response.text, 'html.parser')
         tender_list = []
         for li in soup.select('div.g_ryzs ul.g_bule li'):
@@ -171,9 +171,9 @@ def search(keyword, start_time):
         logger.info(f"tender_list: {tender_list}")
         for list in tender_list:
             format_str = "%Y-%m-%d"
-            logger.info(f"list['publishedTime']: {list['publishedTime']}")
+            # logger.info(f"list['publishedTime']: {list['publishedTime']}")
             bid_time = datetime.strptime(list['publishedTime'], format_str).date()
-            logger.info(f"bid_time: {bid_time}")
+            # logger.info(f"bid_time: {bid_time}")
             if bid_time >= start_time:
                 bid = {
                     "标题": list['title'],
@@ -203,9 +203,9 @@ def lambda_handler(event, context):
     send_test = webhook_test.send_text(f"重启，必胜！{com_key}, {beijing_time}")
     logger.info(f"重启，必胜！\n {beijing_time}")
 
-    start_time = beijing_time - timedelta(days=4)
-    start_time = start_time.date()
-    # start_time = beijing_time.date()
+    # start_time = beijing_time - timedelta(days=4)
+    # start_time = start_time.date()
+    start_time = beijing_time.date()
     logger.info(f"start_time: {start_time}")
     
     bid_total = []
@@ -229,7 +229,7 @@ def lambda_handler(event, context):
                 
                 if message != '':
                     message = message[:-2]
-                    # result = webhook.send_text(message)
+                    result = webhook.send_text(message)
                     # result_test = webhook_test.send_text(message)
                     time.sleep(5)
                 else:
