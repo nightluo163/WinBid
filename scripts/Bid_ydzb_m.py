@@ -139,7 +139,6 @@ def search(keyword, start_time):
         "timeEnd": "",
         "title": keyword
     }
-    # ?title={quote(keyword, encoding='utf-8')}
     bid_list = []
     try:
         response = session.post(
