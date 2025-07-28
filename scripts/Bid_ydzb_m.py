@@ -137,7 +137,7 @@ def search(keyword, start_time):
     payload={
         "timeBegin": "",
         "timeEnd": "",
-        "title": keyword
+        "title": quote(keyword, encoding='utf-8')
     }
     bid_list = []
     try:
