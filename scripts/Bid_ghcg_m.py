@@ -146,7 +146,7 @@ def search(keyword, start_time):
             timeout=60
         )
         response.raise_for_status()
-        # logger.info(f"response.text: {response.text}")
+        logger.info(f"keyword:{keyword},response.text: {response.text}")
         soup = BeautifulSoup(response.text, 'html.parser')
         tender_list = []
         for li in soup.select('div.g_ryzs ul.g_bule li'):
