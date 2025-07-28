@@ -119,7 +119,7 @@ def search(keyword, start_time):
     session = requests.Session()
     adapter = HTTPAdapter(max_retries=retry_strategy)
     session.mount("https://", adapter)
-    home_url = "http://www.youde.net/yd_zbcg/portal/toArticleByType"
+    home_url = "http://www.youde.net/yd_zbcg/portal/index"
     try:
         home_response = session.post(home_url)
         home_response.raise_for_status()
