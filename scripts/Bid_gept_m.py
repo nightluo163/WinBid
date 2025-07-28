@@ -123,7 +123,6 @@ def search(keyword, start_time):
     try:
         home_response = session.get(home_url)
         home_response.raise_for_status()
-        logger.info(f"home_response: {home_response}")
 
     except Exception as e:
             logger.error(f"{com_key}，主页请求失败: {str(e)}")
@@ -134,7 +133,7 @@ def search(keyword, start_time):
         'Content-Type': 'application/json;charset=UTF-8',
     }
     
-    api_url = f"https://www.ebidding.com/.rest/delivery/announcement/?searchContent%5Blike%5D={quote(keyword, encoding='utf-8')}&showDate%5Blte%5D=2025-07-21&availDate%5Bgte%5D=2025-01-21&orderBy=showDate%20desc&offset=0&limit=9"
+    api_url = f"https://www.ebidding.com/.rest/delivery/announcement/?isAirport%5Bnull%5D=true&searchContent%5Blike%5D={quote(keyword, encoding='utf-8')}&showDate%5Blte%5D=2025-07-21&availDate%5Bgte%5D=2025-01-28&orderBy=showDate%20desc&offset=0&limit=9"
     bid_list = []
     try:
         response = session.post(
