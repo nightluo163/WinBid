@@ -143,7 +143,7 @@ def zgdx_search(keyword, start_time):
             "title": keyword,
             "pageSize": 10,
             "pageNum": 1,
-            "type": type,
+            "noticeSummary": 1,
             "provinceCode": ""
         }
 
@@ -157,8 +157,8 @@ def zgdx_search(keyword, start_time):
             
             response.raise_for_status()              
             data = response.json()
-            logger.info(f"data: {data}")
-            data_list = data['data']['list']
+            # logger.info(f"data: {data}")
+            data_list = data['data']['pageInfo']['list']
             for list in data_list:
                 format_str = "%Y-%m-%d %H:%M:%S"
                 bid_time = datetime.strptime(list['createDate'], format_str)
@@ -212,7 +212,7 @@ def lambda_handler(event, context):
                 
                 if message != '':
                     message = message[:-2]
-                    result = webhook.send_text(message)
+                    # result = webhook.send_text(message)
                     # result_test = webhook_test.send_text(message)
                     # logger.info(f"【调试】发送结果: {json.dumps(result)}")
                     # logger.info(f"【调试】发送结果: {json.dumps(result_test)}")
