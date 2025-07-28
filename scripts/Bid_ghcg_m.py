@@ -157,7 +157,7 @@ def search(keyword, start_time):
             full_text = a_tag.text.strip()
             date_span = li.find('span', class_='fr')
             publishedTime = date_span.get_text(strip=True) if date_span else None
-            if publishedTime = None:
+            if publishedTime == None:
                 logger.info(f"publishedTime=None, {full_text}")
                 continue
             href = a_tag['href']
