@@ -166,6 +166,7 @@ def search(keyword, start_time):
                 notice_type = match.group(3).strip() # 公告类型
                 date_span = li.find('span', class_='fr')
                 publishedTime = date_span.get_text(strip=True) if date_span else None
+                logger.info(f"publishedTime: {publishedTime}")
                 
                 # 添加详情页链接信息
                 href = a_tag['href']
@@ -181,8 +182,6 @@ def search(keyword, start_time):
                 # 当无法匹配时保留完整信息
                 tender_list.append({"raw_title": full_text})
 
-        
-        
         for list in tender_list:
             format_str = "%Y-%m-%d"
             bid_time = datetime.strptime(list['publishedTime'], format_str).date()
