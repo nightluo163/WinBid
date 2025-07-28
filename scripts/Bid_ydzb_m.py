@@ -133,7 +133,7 @@ def search(keyword, start_time):
         'Content-Type': 'application/json;charset=UTF-8',
     }
     
-    api_url = f"http://www.youde.net/yd_zbcg/portal/toArticleByType?title={quote(keyword, encoding='utf-8')}"
+    api_url = f"http://www.youde.net/yd_zbcg/portal/getArticleByType?title={quote(keyword, encoding='utf-8')}"
     bid_list = []
     try:
         
