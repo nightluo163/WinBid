@@ -119,7 +119,7 @@ def search(keyword, start_time):
     session = requests.Session()
     adapter = HTTPAdapter(max_retries=retry_strategy)
     session.mount("https://", adapter)
-    home_url = "http://www.youde.net/yd_zbcg/portal/getArticleByType"
+    home_url = "http://www.youde.net/yd_zbcg/portal/toArticleByType"
     try:
         home_response = session.post(home_url)
         home_response.raise_for_status()
@@ -133,7 +133,7 @@ def search(keyword, start_time):
         'Content-Type': 'application/json; charset=UTF-8',
     }
 
-    api_url = f"http://www.youde.net/yd_zbcg/portal/getSearchArticle?timeBegin=&timeEnd=&title={quote(keyword, encoding='utf-8')}"
+    api_url = f"http://www.youde.net/yd_zbcg/portal/toSearchArticle?timeBegin=&timeEnd=&title={quote(keyword, encoding='utf-8')}"
     bid_list = []
     try:
         response = session.post(
