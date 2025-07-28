@@ -123,6 +123,7 @@ def search(keyword, start_time):
     try:
         home_response = session.get(home_url)
         home_response.raise_for_status()
+        logger.info(f"home_response: {home_response}")
 
     except Exception as e:
             logger.error(f"{com_key}，主页请求失败: {str(e)}")
@@ -144,6 +145,7 @@ def search(keyword, start_time):
         
         response.raise_for_status()              
         data = response.json()
+        logger.info(f"data: {data}")
         data_list = data['data']['results']
         for list in data_list:
             format_str = "%Y-%m-%d %H:%M:%S"
