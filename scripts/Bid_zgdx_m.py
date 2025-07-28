@@ -141,9 +141,10 @@ def zgdx_search(keyword, start_time):
         type_id = type_list[i]
         payload = {
             "title": keyword,
+            "type": type,
             "pageSize": 10,
             "pageNum": 1,
-            "noticeSummary": 1,
+            "noticeSummary": "",
             "provinceCode": ""
         }
 
