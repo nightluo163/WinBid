@@ -128,14 +128,12 @@ def search(keyword, start_time):
     #         logger.error(f"{com_key}，主页请求失败: {str(e)}")
     #         return None
 
-    referer = f"http://www.youde.net/yd_zbcg/portal/toSearchArticle?title={quote(keyword, encoding='utf-8')}"
     headers = {
         'User-Agent': get_random_user_agent(),
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        'Referer': referer
     }
     
-    api_url = f"http://www.youde.net/yd_zbcg/portal/getSearchArticle"
+    api_url = f"http://www.youde.net/yd_zbcg/portal/toSearchArticle"
     payload={
         "timeBegin": "",
         "timeEnd": "",
