@@ -130,7 +130,7 @@ def search(keyword, start_time):
 
     headers = {
         'User-Agent': get_random_user_agent(),
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'Content-Type': 'application/json; charset=UTF-8',
     }
     
     api_url = f"http://www.youde.net/yd_zbcg/portal/toSearchArticle?title={quote(keyword, encoding='utf-8')}"
@@ -149,9 +149,9 @@ def search(keyword, start_time):
         )
         response.raise_for_status()
         logger.info(f"response-type: {response.headers.get('Content-Type', '')}")
-        soup = BeautifulSoup(response.text, 'html.parser')
-        title = soup.find('title').text if soup.title else "无标题"
-        logger.info(f"title: {title}")
+        # soup = BeautifulSoup(response.text, 'html.parser')
+        # title = soup.find('title').text if soup.title else "无标题"
+        # logger.info(f"title: {title}")
         
         data = response.json()
         logger.info(f"data: {data}")
