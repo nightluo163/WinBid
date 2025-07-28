@@ -119,36 +119,31 @@ def search(keyword, start_time):
     session = requests.Session()
     adapter = HTTPAdapter(max_retries=retry_strategy)
     session.mount("https://", adapter)
-    # home_url = "http://www.youde.net"
-    # try:
-    #     home_response = session.get(home_url)
-    #     home_response.raise_for_status()
+    home_url = "http://www.youde.net/yd_zbcg/portal/getArticleByType"
+    try:
+        home_response = session.post(home_url)
+        home_response.raise_for_status()
 
-    # except Exception as e:
-    #         logger.error(f"{com_key}，主页请求失败: {str(e)}")
-    #         return None
+    except Exception as e:
+            logger.error(f"{com_key}，主页请求失败: {str(e)}")
+            return None
 
     headers = {
         'User-Agent': get_random_user_agent(),
         'Content-Type': 'application/json; charset=UTF-8',
     }
-    
-    api_url = f"http://www.youde.net/yd_zbcg/portal/toSearchArticle?title={quote(keyword, encoding='utf-8')}"
-    # payload={
-    #     "timeBegin": "",
-    #     "timeEnd": "",
-    #     "title": keyword
-    # }
+
+    api_url = f"http://www.youde.net/yd_zbcg/portal/getSearchArticle?timeBegin=&timeEnd=&title={quote(keyword, encoding='utf-8')}"
     bid_list = []
     try:
         response = session.post(
             url=api_url,
             headers=headers,
-            # data=payload,
             timeout=60
         )
         response.raise_for_status()
         logger.info(f"response-type: {response.headers.get('Content-Type', '')}")
+        logger.info(f"response: {response.text}")
         soup = BeautifulSoup(response.text, 'html.parser')
         logger.info(f"soup: {soup}")
         # title = soup.find('title').text if soup.title else "无标题"
@@ -230,6 +225,7 @@ def lambda_handler(event, context):
             bid_total = bid_total[-6:]
             
         beijing_time = datetime.now(timezone(timedelta(hours=8)))
+        break
 
     now_time = beijing_time.strftime("%Y-%m-%d %H:%M:%S")
     time_send = webhook_test.send_text(f"归零，更新！{com_key},{now_time}")
