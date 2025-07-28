@@ -148,7 +148,11 @@ def search(keyword, start_time):
             timeout=60
         )
         response.raise_for_status()
-        logger.info(f"response: {response.text}")
+        logger.info(f"response-type: {response.headers.get('Content-Type', '')}")
+        soup = BeautifulSoup(response.text, 'html.parser')
+        title = soup.find('title').text if soup.title else "无标题"
+        logger.info(f"title: {title}")
+        
         data = response.json()
         logger.info(f"data: {data}")
         data_list = data['obj']['rows']
