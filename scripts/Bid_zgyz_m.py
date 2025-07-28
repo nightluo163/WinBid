@@ -119,14 +119,14 @@ def search(keyword, start_time):
     session = requests.Session()
     adapter = HTTPAdapter(max_retries=retry_strategy)
     session.mount("https://", adapter)
-    home_url = "https://www.chinapost.com.cn"
-    try:
-        home_response = session.get(home_url)
-        home_response.raise_for_status()
+    # home_url = "https://www.chinapost.com.cn"
+    # try:
+    #     home_response = session.get(home_url)
+    #     home_response.raise_for_status()
 
-    except Exception as e:
-            logger.error(f"{com_key}，主页请求失败: {str(e)}")
-            return None
+    # except Exception as e:
+    #         logger.error(f"{com_key}，主页请求失败: {str(e)}")
+    #         return None
 
     headers = {
         'User-Agent': get_random_user_agent(),
