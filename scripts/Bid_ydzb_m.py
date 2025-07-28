@@ -133,17 +133,13 @@ def search(keyword, start_time):
         'Content-Type': 'application/json;charset=UTF-8',
     }
     
-    api_url = f"http://www.youde.net/yd_zbcg/portal/getArticleByType"
-    payload = {
-        "title": keyword
-    }
+    api_url = f"http://www.youde.net/yd_zbcg/portal/toArticleByType?title={quote(keyword, encoding='utf-8')}"
     bid_list = []
     try:
         
         response = session.post(
             url=api_url,
             headers=headers,
-            json=payload,
             timeout=60
         )
         
