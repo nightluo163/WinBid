@@ -148,26 +148,19 @@ def search(keyword, start_time):
     #     'X-Requested-With': 'XMLHttpRequest'
     # }
 
-    api_url = f"http://www.youde.net/yd_zbcg/portal/getArticleByType?title={quote(keyword, encoding='utf-8')}"
+    api_url = f"http://www.youde.net/yd_zbcg/portal/getArticleByType"
+    payload = {
+        "title": keyword
+    }
     bid_list = []
     try:
         response = session.post(
             url=api_url,
             headers=headers,
+            data=payload,
             timeout=60
         )
         response.raise_for_status()
-        # logger.info(f"response-type: {response.headers.get('Content-Type', '')}")
-        # logger.info(f"response: {response.text}")
-        # soup = BeautifulSoup(response.text, 'html.parser')
-        # logger.info(f"soup: {soup}")
-        # # title = soup.find('title').text if soup.title else "无标题"
-        # # logger.info(f"title: {title}")
-        # table = soup.find('table', {'class': 'tender-table'})
-        # logger.info(f"table: {table}")
-        # tenders = []
-        # for row in table.find_all('tr')[1:]:  # 跳过表头
-        #     cols = row.find_all('td')
         
         data = response.json()
         logger.info(f"data: {data}")
@@ -207,7 +200,7 @@ def lambda_handler(event, context):
     bid_total = []
     while beijing_time <= end_time:
         try:
-            start_time = beijing_time - timedelta(days=9)
+            start_time = beijing_time - timedelta(days=10)
             # start_time = beijing_time - timedelta(minutes=30)
             logger.info(f"start_time: {start_time}")
             for keyword in keyword_list:
