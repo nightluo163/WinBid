@@ -181,6 +181,7 @@ def search(keyword, start_time):
                 # 当无法匹配时保留完整信息
                 tender_list.append({"raw_title": full_text})
 
+        logger.info(f"tender_list: {tender_list}")
         for list in tender_list:
             format_str = "%Y-%m-%d"
             logger.info(f"list['publishedTime']: {list['publishedTime']}")
