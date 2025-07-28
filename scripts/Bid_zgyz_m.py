@@ -115,7 +115,7 @@ def get_random_user_agent():
     ua = UserAgent()
     return ua.random
     
-def zgyz_search(keyword, start_time):
+def search(keyword, start_time):
     session = requests.Session()
     adapter = HTTPAdapter(max_retries=retry_strategy)
     session.mount("https://", adapter)
@@ -144,7 +144,7 @@ def zgyz_search(keyword, start_time):
         
         response.raise_for_status()              
         data = response.json()
-        # logger.info(f"data: {data}")
+        logger.info(f"data: {data}")
         data_list = data['data']
         for list in data_list:
             format_str = "%Y-%m-%d"
@@ -188,7 +188,7 @@ def lambda_handler(event, context):
         logger.info(f"beijing_time: {beijing_time}")
         try:
             for keyword in keyword_list:
-                result = zgyz_search(keyword, start_time)
+                result = search(keyword, start_time)
                 message = ''
                 for msg in result:
                     if msg not in bid_total:
