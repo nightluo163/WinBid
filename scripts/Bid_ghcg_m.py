@@ -213,7 +213,7 @@ def lambda_handler(event, context):
         try:
             # start_time = beijing_time - timedelta(days=10)
             # start_time = beijing_time - timedelta(minutes=30)
-            logger.info(f"start_time: {start_time}")
+            # logger.info(f"start_time: {start_time}")
             for keyword in keyword_list:
                 result = search(keyword, start_time)
                 message = ''
