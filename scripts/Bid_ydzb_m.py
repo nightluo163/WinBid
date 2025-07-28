@@ -148,7 +148,7 @@ def search(keyword, start_time):
             timeout=60
         )
         response.raise_for_status()
-        logger.info(f"response: {response}")
+        logger.info(f"response: {response.text}")
         data = response.json()
         logger.info(f"data: {data}")
         data_list = data['obj']['rows']
