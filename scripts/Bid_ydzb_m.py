@@ -119,26 +119,27 @@ def search(keyword, start_time):
     session = requests.Session()
     adapter = HTTPAdapter(max_retries=retry_strategy)
     session.mount("https://", adapter)
-    home_url = "http://www.youde.net/yd_zbcg/portal/getArticleByType"
-    try:
-        home_response = session.get(home_url)
-        home_response.raise_for_status()
+    # home_url = "http://www.youde.net"
+    # try:
+    #     home_response = session.get(home_url)
+    #     home_response.raise_for_status()
 
-    except Exception as e:
-            logger.error(f"{com_key}，主页请求失败: {str(e)}")
-            return None
+    # except Exception as e:
+    #         logger.error(f"{com_key}，主页请求失败: {str(e)}")
+    #         return None
 
     headers = {
         'User-Agent': get_random_user_agent(),
-        'Content-Type': 'application/json;charset=UTF-8',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
     }
     
-    api_url = f"http://www.youde.net/yd_zbcg/portal/toSearchArticle?title={quote(keyword, encoding='utf-8')}"
-    # payload={
-    #     "timeBegin": "",
-    #     "timeEnd": "",
-    #     "title": quote(keyword, encoding='utf-8')
-    # }
+    api_url = f"http://www.youde.net/yd_zbcg/portal/getSearchArticle"
+    payload={
+        "timeBegin": "",
+        "timeEnd": "",
+        "title": keyword
+    }
+    # ?title={quote(keyword, encoding='utf-8')}
     bid_list = []
     try:
         response = session.post(
