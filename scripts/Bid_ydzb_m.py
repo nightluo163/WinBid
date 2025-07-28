@@ -119,21 +119,36 @@ def search(keyword, start_time):
     session = requests.Session()
     adapter = HTTPAdapter(max_retries=retry_strategy)
     session.mount("https://", adapter)
-    home_url = "http://www.youde.net/yd_zbcg/portal/index"
-    try:
-        home_response = session.post(home_url)
-        home_response.raise_for_status()
+    # home_url = "http://www.youde.net/yd_zbcg/portal/index"
+    # try:
+    #     home_response = session.post(home_url)
+    #     home_response.raise_for_status()
 
-    except Exception as e:
-            logger.error(f"{com_key}，主页请求失败: {str(e)}")
-            return None
+    # except Exception as e:
+    #         logger.error(f"{com_key}，主页请求失败: {str(e)}")
+    #         return None
+
+    # headers = {
+    #     'User-Agent': get_random_user_agent(),
+    #     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+    #     'Referer': 'http://www.youde.net/yd_zbcg/portal/toSearchArticle?title=%E5%9F%B9%E8%AE%AD',
+    #     'Host': 'www.youde.net',
+    #     'Origin': 'http://www.youde.net'
+    # }
 
     headers = {
-        'User-Agent': get_random_user_agent(),
+        'Accept': 'application/json, text/javascript, */*; q=0.01',
+        'Accept-Encoding': 'gzip, deflate',
+        'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8,ar;q=0.7',
+        'Content-Length': 44,
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        'Referer': 'http://www.youde.net/yd_zbcg/portal/toSearchArticle?title=%E5%9F%B9%E8%AE%AD',
+        'Cookie': 'JSESSIONID=17BF927452F2661B5CFD7BCD8DB16F20',
         'Host': 'www.youde.net',
-        'Origin': 'http://www.youde.net'
+        'Origin': 'http://www.youde.net',
+        'Proxy-Connection': 'keep-alive',
+        'Referer': 'http://www.youde.net/yd_zbcg/portal/toSearchArticle?title=%E5%9F%B9%E8%AE%AD',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+        'X-Requested-With': 'XMLHttpRequest'
     }
 
     api_url = f"http://www.youde.net/yd_zbcg/portal/getSearchArticle"
