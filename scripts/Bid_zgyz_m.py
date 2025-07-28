@@ -145,7 +145,7 @@ def zgyz_search(keyword, start_time):
         response.raise_for_status()              
         data = response.json()
         # logger.info(f"data: {data}")
-        data_list = data['data'][:10]
+        data_list = data['data']
         for list in data_list:
             format_str = "%Y-%m-%d"
             bid_time = datetime.strptime(list['time'], format_str).date()
@@ -197,6 +197,7 @@ def lambda_handler(event, context):
                             continue
                         else:
                             bid_total.append(msg)
+                            logger.info(f"msg['标题']：{msg['标题']}")
                             message = message + f"【标题】{msg['标题']}\n【链接】{msg['链接']}\n\n"
                 
                 if message != '':
