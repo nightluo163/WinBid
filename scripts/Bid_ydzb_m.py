@@ -140,7 +140,7 @@ def search(keyword, start_time):
         'Accept': 'application/json, text/javascript, */*; q=0.01',
         'Accept-Encoding': 'gzip, deflate',
         'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8,ar;q=0.7',
-        'Content-Length': 44,
+        'Content-Length': '44',
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
         'Cookie': 'JSESSIONID=17BF927452F2661B5CFD7BCD8DB16F20',
         'Host': 'www.youde.net',
