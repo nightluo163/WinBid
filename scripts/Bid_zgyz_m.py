@@ -21,7 +21,7 @@ with open('scripts/bid.json', 'r', encoding='utf-8') as f:
     keyword_list = keyword_main + keyword_others
     not_list = bid["keyword"]["not"]
 
-key = os.getenv("key_main")
+key = os.getenv("key_jk")
 key_test = os.getenv("key_test")
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
@@ -143,6 +143,7 @@ def zgyz_search(keyword, start_time):
         
         response.raise_for_status()              
         data = response.json()
+        logger.info(f"data: {data}")
         data_list = data['data'][:10]
         for list in data_list:
             format_str = "%Y-%m-%d"
@@ -199,8 +200,8 @@ def lambda_handler(event, context):
                 
                 if message != '':
                     message = message[:-2]
-                    result = webhook.send_text(message)
-                    # result_test = webhook_test.send_text(message)
+                    # result = webhook.send_text(message)
+                    result_test = webhook_test.send_text(message)
                     # logger.info(f"【调试】发送结果: {json.dumps(result)}")
                     # logger.info(f"【调试】发送结果: {json.dumps(result_test)}")
                     time.sleep(5)
