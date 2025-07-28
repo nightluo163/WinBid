@@ -162,24 +162,20 @@ def search(keyword, start_time):
             if match:
                 # 拆分信息
                 title = match.group(1)             # 项目标题
-                project_id = match.group(2)         # 项目编号
+                # project_id = match.group(2)         # 项目编号
                 notice_type = match.group(3).strip() # 公告类型
-                logger.info(f"title: {title}")
-                logger.info(f"project_id: {project_id}")
-                logger.info(f"notice_type: {notice_type}")
-                logger.info(f"match.group(3): {match.group(3)}")
+                date_span = li.find('span', class_='fr')
+                publishedTime = date_span.get_text(strip=True) if date_span else None
                 
                 # 添加详情页链接信息
                 href = a_tag['href']
-                # time = 
-                vid = re.search(r'VID=(\d+)', href).group(1) if re.search(r'VID=\d+', href) else None
+                # vid = re.search(r'VID=(\d+)', href).group(1) if re.search(r'VID=\d+', href) else None
                 
                 tender_list.append({
                     "title": title,
-                    "project_id": project_id,
+                    "publishedTime": publishedTime,
                     "notice_type": notice_type,
                     "detail_url": "http://www.zgguohe.com/" + href,
-                    "vid": vid
                 })
             else:
                 # 当无法匹配时保留完整信息
@@ -188,12 +184,13 @@ def search(keyword, start_time):
         
         
         for list in tender_list:
-            format_str = "%Y-%m-%d %H:%M:%S"
-            bid_time = datetime.strptime(list['publishedTime'], format_str)
-            if bid_time >= start_time.replace(tzinfo=None):
+            format_str = "%Y-%m-%d"
+            bid_time = datetime.strptime(list['publishedTime'], format_str).date()
+            if bid_time >= start_time:
                 bid = {
                     "标题": list['title'],
-                    "链接":  f"http://www.youde.net/yd_zbcg/portal/toDetail?articleId={list['articleId']}"
+                    "类型": list['notice_type'],
+                    "链接": list['detail_url']
                 }
                 bid_list.append(bid)
             else:
@@ -218,12 +215,17 @@ def lambda_handler(event, context):
     logger.info(f"end_time: {end_time}")
     send_test = webhook_test.send_text(f"重启，必胜！{com_key}, {beijing_time}")
     logger.info(f"重启，必胜！\n {beijing_time}")
+
+    start_time = beijing_time - timedelta(days=4)
+    start_time = start_time.date()
+    # start_time = beijing_time.date()
+    logger.info(f"start_time: {start_time}")
     
     bid_total = []
     while beijing_time <= end_time:
         try:
             # start_time = beijing_time - timedelta(days=10)
-            start_time = beijing_time - timedelta(minutes=30)
+            # start_time = beijing_time - timedelta(minutes=30)
             logger.info(f"start_time: {start_time}")
             for keyword in keyword_list:
                 result = search(keyword, start_time)
@@ -251,8 +253,8 @@ def lambda_handler(event, context):
             logger.error(f"全局异常: {str(e)}")
             error_send = webhook_test.send_text(f"{com_key}，全局异常: {str(e)}")
             
-        if len(bid_total) >= 20:
-            bid_total = bid_total[-6:]
+        if len(bid_total) >= 40:
+            bid_total = bid_total[-20:]
             
         beijing_time = datetime.now(timezone(timedelta(hours=8)))
         break
