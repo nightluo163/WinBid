@@ -23,6 +23,7 @@ with open('scripts/bid.json', 'r', encoding='utf-8') as f:
 
 key = os.getenv("key_jk")
 key_test = os.getenv("key_test")
+com_key = "国e平台"
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
@@ -124,7 +125,7 @@ def search(keyword, start_time):
         home_response.raise_for_status()
 
     except Exception as e:
-            logger.error(f"国e平台，主页请求失败: {str(e)}")
+            logger.error(f"{com_key}，主页请求失败: {str(e)}")
             return None
 
     headers = {
@@ -157,7 +158,7 @@ def search(keyword, start_time):
                 break
 
     except requests.exceptions.HTTPError as e:
-        logger.error(f"国e平台，API请求失败: 状态码 {response.status_code}, 响应内容: {response.text}")
+        logger.error(f"{com_key}，API请求失败: 状态码 {response.status_code}, 响应内容: {response.text}")
         return None
     
     return bid_list
@@ -173,7 +174,7 @@ def lambda_handler(event, context):
     beijing_time = utc_now.astimezone(timezone(timedelta(hours=8)))        
     end_time = beijing_time + timedelta(hours=5)
     logger.info(f"end_time: {end_time}")
-    send_test = webhook_test.send_text(f"重启，必胜！\n {beijing_time}")
+    send_test = webhook_test.send_text(f"重启，必胜！{com_key}, {beijing_time}")
     logger.info(f"重启，必胜！\n {beijing_time}")
     
     bid_total = []
@@ -202,8 +203,8 @@ def lambda_handler(event, context):
                     time.sleep(5)
                     continue
         except Exception as e:
-            logger.error(f"国e平台，全局异常: {str(e)}")
-            error_send = webhook_test.send_text(f"国e平台，全局异常: {str(e)}")
+            logger.error(f"全局异常: {str(e)}")
+            error_send = webhook_test.send_text(f"{com_key}，全局异常: {str(e)}")
             
         if len(bid_total) >= 20:
             bid_total = bid_total[-6:]
@@ -211,7 +212,7 @@ def lambda_handler(event, context):
         beijing_time = datetime.now(timezone(timedelta(hours=8)))
 
     now_time = beijing_time.strftime("%Y-%m-%d %H:%M:%S")
-    time_send = webhook_test.send_text(f"归零，更新！\n{now_time}")
+    time_send = webhook_test.send_text(f"归零，更新！{com_key},{now_time}")
     logger.info(f"归零，更新！\n{now_time}")
     
 if __name__ == "__main__":
