@@ -130,10 +130,13 @@ def search(keyword, start_time):
 
     headers = {
         'User-Agent': get_random_user_agent(),
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'Referer': 'http://www.youde.net/yd_zbcg/portal/toSearchArticle?title=%E5%9F%B9%E8%AE%AD',
+        'Host': 'www.youde.net',
+        'Origin': 'http://www.youde.net'
     }
 
-    api_url = f"http://www.youde.net/yd_zbcg/portal/toSearchArticle?timeBegin=&timeEnd=&title={quote(keyword, encoding='utf-8')}"
+    api_url = f"http://www.youde.net/yd_zbcg/portal/getSearchArticle"
     bid_list = []
     try:
         response = session.post(
