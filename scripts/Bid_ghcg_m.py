@@ -168,7 +168,7 @@ def search(keyword, start_time):
                 "detail_url": "http://www.zgguohe.com/" + href,
             })
 
-        logger.info(f"tender_list: {tender_list}")
+        # logger.info(f"tender_list: {tender_list}")
         for list in tender_list:
             format_str = "%Y-%m-%d"
             # logger.info(f"list['publishedTime']: {list['publishedTime']}")
