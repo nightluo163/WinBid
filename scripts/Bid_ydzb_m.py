@@ -133,7 +133,7 @@ def search(keyword, start_time):
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
     }
     
-    api_url = f"http://www.youde.net/yd_zbcg/portal/toSearchArticle?title={keyword}"
+    api_url = f"http://www.youde.net/yd_zbcg/portal/getSearchArticle?title={keyword}"
     payload={
         "timeBegin": "",
         "timeEnd": "",
@@ -148,7 +148,7 @@ def search(keyword, start_time):
             timeout=60
         )
         response.raise_for_status()
-        logger.info(f"response: {response.text}")
+        # logger.info(f"response: {response.text}")
         data = response.json()
         logger.info(f"data: {data}")
         data_list = data['obj']['rows']
