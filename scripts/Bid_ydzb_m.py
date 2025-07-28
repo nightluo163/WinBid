@@ -146,7 +146,7 @@ def search(keyword, start_time):
         'Host': 'www.youde.net',
         'Origin': 'http://www.youde.net',
         'Proxy-Connection': 'keep-alive',
-        'Referer': 'http://www.youde.net/yd_zbcg/portal/toSearchArticle?title=%E5%9F%B9%E8%AE%AD',
+        'Referer': 'http://www.youde.net/yd_zbcg/portal/toSearchArticle?title=培训',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
         'X-Requested-With': 'XMLHttpRequest'
     }
