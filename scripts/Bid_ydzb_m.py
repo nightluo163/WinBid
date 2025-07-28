@@ -128,23 +128,25 @@ def search(keyword, start_time):
     #         logger.error(f"{com_key}，主页请求失败: {str(e)}")
     #         return None
 
+    referer = f"http://www.youde.net/yd_zbcg/portal/toSearchArticle?title={quote(keyword, encoding='utf-8')}"
     headers = {
         'User-Agent': get_random_user_agent(),
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'Referer': referer
     }
     
-    api_url = f"http://www.youde.net/yd_zbcg/portal/toSearchArticle?title={quote(keyword, encoding='utf-8')}"
-    # payload={
-    #     "timeBegin": "",
-    #     "timeEnd": "",
-    #     "title": keyword
-    # }
+    api_url = f"http://www.youde.net/yd_zbcg/portal/getSearchArticle"
+    payload={
+        "timeBegin": "",
+        "timeEnd": "",
+        "title": keyword
+    }
     bid_list = []
     try:
         response = session.post(
             url=api_url,
             headers=headers,
-            # data=payload,
+            data=payload,
             timeout=60
         )
         response.raise_for_status()
