@@ -171,7 +171,7 @@ def search(keyword, start_time):
                 
                 # 添加详情页链接信息
                 href = a_tag['href']
-                time = 
+                # time = 
                 vid = re.search(r'VID=(\d+)', href).group(1) if re.search(r'VID=\d+', href) else None
                 
                 tender_list.append({
