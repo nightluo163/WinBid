@@ -155,31 +155,18 @@ def search(keyword, start_time):
                 continue
             
             full_text = a_tag.text.strip()
-            
-            # 使用正则表达式提取结构化信息
-            pattern = r'(.+?)\(项目编号\s*[:：]\s*(\w+\d[-\w\d]*)\)(.*)'
-            match = re.search(pattern, full_text)
-            if match:
-                # 拆分信息
-                title = match.group(1)             # 项目标题
-                # project_id = match.group(2)         # 项目编号
-                notice_type = match.group(3).strip() # 公告类型
-                date_span = li.find('span', class_='fr')
-                publishedTime = date_span.get_text(strip=True) if date_span else None
+            date_span = li.find('span', class_='fr')
+            publishedTime = date_span.get_text(strip=True) if date_span else None
+            if publishedTime = None:
+                logger.info(f"publishedTime=None, {full_text}")
+                continue
+            href = a_tag['href']
                 
-                # 添加详情页链接信息
-                href = a_tag['href']
-                # vid = re.search(r'VID=(\d+)', href).group(1) if re.search(r'VID=\d+', href) else None
-                
-                tender_list.append({
-                    "title": title,
-                    "publishedTime": publishedTime,
-                    "notice_type": notice_type,
-                    "detail_url": "http://www.zgguohe.com/" + href,
-                })
-            else:
-                # 当无法匹配时保留完整信息
-                tender_list.append({"raw_title": full_text})
+            tender_list.append({
+                "title": full_text,
+                "publishedTime": publishedTime,
+                "detail_url": "http://www.zgguohe.com/" + href,
+            })
 
         logger.info(f"tender_list: {tender_list}")
         for list in tender_list:
@@ -190,7 +177,6 @@ def search(keyword, start_time):
             if bid_time >= start_time:
                 bid = {
                     "标题": list['title'],
-                    "类型": list['notice_type'],
                     "链接": list['detail_url']
                 }
                 bid_list.append(bid)
@@ -243,7 +229,7 @@ def lambda_handler(event, context):
                 
                 if message != '':
                     message = message[:-2]
-                    result = webhook.send_text(message)
+                    # result = webhook.send_text(message)
                     # result_test = webhook_test.send_text(message)
                     time.sleep(5)
                 else:
