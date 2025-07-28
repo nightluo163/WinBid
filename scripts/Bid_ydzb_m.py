@@ -200,8 +200,8 @@ def lambda_handler(event, context):
     bid_total = []
     while beijing_time <= end_time:
         try:
-            start_time = beijing_time - timedelta(days=10)
-            # start_time = beijing_time - timedelta(minutes=30)
+            # start_time = beijing_time - timedelta(days=10)
+            start_time = beijing_time - timedelta(minutes=30)
             logger.info(f"start_time: {start_time}")
             for keyword in keyword_list:
                 result = search(keyword, start_time)
@@ -218,7 +218,7 @@ def lambda_handler(event, context):
                 
                 if message != '':
                     message = message[:-2]
-                    # result = webhook.send_text(message)
+                    result = webhook.send_text(message)
                     # result_test = webhook_test.send_text(message)
                     time.sleep(5)
                 else:
@@ -227,13 +227,12 @@ def lambda_handler(event, context):
         
         except Exception as e:
             logger.error(f"全局异常: {str(e)}")
-            # error_send = webhook_test.send_text(f"{com_key}，全局异常: {str(e)}")
+            error_send = webhook_test.send_text(f"{com_key}，全局异常: {str(e)}")
             
         if len(bid_total) >= 20:
             bid_total = bid_total[-6:]
             
         beijing_time = datetime.now(timezone(timedelta(hours=8)))
-        break
 
     now_time = beijing_time.strftime("%Y-%m-%d %H:%M:%S")
     time_send = webhook_test.send_text(f"归零，更新！{com_key},{now_time}")
