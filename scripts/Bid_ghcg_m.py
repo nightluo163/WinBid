@@ -146,7 +146,7 @@ def search(keyword, start_time):
             timeout=60
         )
         response.raise_for_status()
-        logger.info(f"response.text: {response.text}")
+        # logger.info(f"response.text: {response.text}")
         soup = BeautifulSoup(response.text, 'html.parser')
         tender_list = []
         for li in soup.select('div.g_ryzs ul.g_bule li'):
@@ -165,16 +165,20 @@ def search(keyword, start_time):
                 project_id = match.group(2)         # 项目编号
                 notice_type = match.group(3).strip() # 公告类型
                 logger.info(f"title: {title}")
+                logger.info(f"project_id: {project_id}")
+                logger.info(f"notice_type: {notice_type}")
+                logger.info(f"match.group(3): {match.group(3)}")
                 
                 # 添加详情页链接信息
                 href = a_tag['href']
+                time = 
                 vid = re.search(r'VID=(\d+)', href).group(1) if re.search(r'VID=\d+', href) else None
                 
                 tender_list.append({
                     "title": title,
                     "project_id": project_id,
                     "notice_type": notice_type,
-                    "detail_url": "http://www.example.com/" + href,  # 补全域名
+                    "detail_url": "http://www.zgguohe.com/" + href,
                     "vid": vid
                 })
             else:
@@ -182,10 +186,8 @@ def search(keyword, start_time):
                 tender_list.append({"raw_title": full_text})
 
         
-        data = response.json()
-        # logger.info(f"data: {data}")
-        data_list = data['obj']['rows']
-        for list in data_list:
+        
+        for list in tender_list:
             format_str = "%Y-%m-%d %H:%M:%S"
             bid_time = datetime.strptime(list['publishedTime'], format_str)
             if bid_time >= start_time.replace(tzinfo=None):
@@ -253,6 +255,7 @@ def lambda_handler(event, context):
             bid_total = bid_total[-6:]
             
         beijing_time = datetime.now(timezone(timedelta(hours=8)))
+        break
 
     now_time = beijing_time.strftime("%Y-%m-%d %H:%M:%S")
     time_send = webhook_test.send_text(f"归零，更新！{com_key},{now_time}")
