@@ -133,7 +133,7 @@ def search(keyword, start_time):
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
     }
     
-    api_url = f"http://www.youde.net/yd_zbcg/portal/toSearchArticle"
+    api_url = f"http://www.youde.net/yd_zbcg/portal/toSearchArticle?title={keyword}"
     payload={
         "timeBegin": "",
         "timeEnd": "",
@@ -206,7 +206,7 @@ def lambda_handler(event, context):
                 if message != '':
                     message = message[:-2]
                     # result = webhook.send_text(message)
-                    result_test = webhook_test.send_text(message)
+                    # result_test = webhook_test.send_text(message)
                     time.sleep(5)
                 else:
                     time.sleep(5)
