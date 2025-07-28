@@ -145,7 +145,10 @@ def search(keyword, start_time):
         response.raise_for_status()              
         data = response.json()
         logger.info(f"data: {data}")
-        data_list = data['data']
+        if data['count'] == 0:
+            data_list = []
+        else:
+            data_list = data['data']
         for list in data_list:
             format_str = "%Y-%m-%d"
             bid_time = datetime.strptime(list['time'], format_str).date()
