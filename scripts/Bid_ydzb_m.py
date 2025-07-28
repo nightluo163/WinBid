@@ -151,7 +151,7 @@ def search(keyword, start_time):
         
         response.raise_for_status()              
         data = response.json()
-        # logger.info(f"data: {data}")
+        logger.info(f"data: {data}")
         data_list = data['obj']['rows']
         for list in data_list:
             format_str = "%Y-%m-%d %H:%M:%S"
