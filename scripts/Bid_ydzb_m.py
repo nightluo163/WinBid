@@ -182,7 +182,7 @@ def lambda_handler(event, context):
     bid_total = []
     while beijing_time <= end_time:
         try:
-            start_time = beijing_time - timedelta(days=4)
+            start_time = beijing_time - timedelta(days=9)
             # start_time = beijing_time - timedelta(minutes=30)
             logger.info(f"start_time: {start_time}")
             for keyword in keyword_list:
