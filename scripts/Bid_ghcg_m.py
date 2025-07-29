@@ -206,7 +206,7 @@ def lambda_handler(event, context):
     # start_time = beijing_time - timedelta(days=4)
     # start_time = start_time.date()
     start_time = beijing_time.date()
-    logger.info(f"start_time: {start_time}")
+    # logger.info(f"start_time: {start_time}")
     
     bid_total = []
     while beijing_time <= end_time:
@@ -244,6 +244,7 @@ def lambda_handler(event, context):
             bid_total = bid_total[-20:]
             
         beijing_time = datetime.now(timezone(timedelta(hours=8)))
+        logger.info(f"beijing_time: {beijing_time}")
 
     now_time = beijing_time.strftime("%Y-%m-%d %H:%M:%S")
     time_send = webhook_test.send_text(f"归零，更新！{com_key},{now_time}")
