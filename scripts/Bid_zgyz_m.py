@@ -21,7 +21,8 @@ with open('scripts/bid.json', 'r', encoding='utf-8') as f:
     keyword_list = keyword_main + keyword_others
     not_list = bid["keyword"]["not"]
 
-key = os.getenv("key_jk")
+# key = os.getenv("key_jk")
+key = os.getenv("key_main")
 key_test = os.getenv("key_test")
 com_key = "中国邮政"
 
