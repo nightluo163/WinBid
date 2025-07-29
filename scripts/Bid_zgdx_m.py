@@ -209,6 +209,7 @@ def lambda_handler(event, context):
                             continue
                         else:
                             bid_total.append(msg)
+                            logger.info(f"keyword：{keyword}，msg['标题']：{msg['标题']}")
                             message = message + f"【标题】{msg['标题']}\n【类型】{msg['类型']}\n【链接】{msg['链接']}\n\n"
                 
                 if message != '':
