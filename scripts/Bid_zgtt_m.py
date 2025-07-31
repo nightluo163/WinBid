@@ -20,8 +20,8 @@ with open('scripts/bid.json', 'r', encoding='utf-8') as f:
     keyword_list = keyword_main + keyword_others
     not_list = bid["keyword"]["not"]
 
-# key = os.getenv("key_jk")
-key = os.getenv("key_main")
+key = os.getenv("key_jk")
+# key = os.getenv("key_main")
 key_test = os.getenv("key_test")
 com_key = "中国铁塔"
 
@@ -193,7 +193,7 @@ def lambda_handler(event, context):
     
     utc_now = datetime.now(timezone.utc)
     beijing_time = utc_now.astimezone(timezone(timedelta(hours=8)))        
-    end_time = beijing_time + timedelta(hours=6)
+    end_time = beijing_time + timedelta(hours=5.95)
     logger.info(f"end_time: {end_time}")
     send_test = webhook_test.send_text(f"重启，必胜！{com_key}, {beijing_time}")
     logger.info(f"重启，必胜！\n {beijing_time}")
@@ -202,7 +202,7 @@ def lambda_handler(event, context):
     while beijing_time <= end_time:
         try:
             # start_time = beijing_time - timedelta(days=2)
-            start_time = beijing_time - timedelta(minutes=15)
+            start_time = beijing_time - timedelta(minutes=20)
             logger.info(f"start_time: {start_time}")
             for keyword in keyword_list:
                 result = zgtt_search(keyword, start_time)
