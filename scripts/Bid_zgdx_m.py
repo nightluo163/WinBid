@@ -22,6 +22,7 @@ with open('scripts/bid.json', 'r', encoding='utf-8') as f:
 
 key = os.getenv("key_main")
 key_test = os.getenv("key_test")
+com_key = "中国电信"
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
@@ -34,7 +35,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 # 创建文件处理器（输出到scripts/output/bid_log.log）
-log_file = os.path.join(log_dir, "bid_log.log")
+log_file = os.path.join(log_dir, f"bid_log_{com_key}.log")
 file_handler = logging.FileHandler(log_file, encoding='utf-8')
 file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
 logger.addHandler(file_handler)
@@ -123,7 +124,7 @@ def zgdx_search(keyword, start_time):
         home_response.raise_for_status()
 
     except Exception as e:
-            logger.error(f"中国电信，主页请求失败: {str(e)}")
+            logger.error(f"{com_key}，主页请求失败: {str(e)}")
             return None
 
     headers = {
@@ -174,7 +175,7 @@ def zgdx_search(keyword, start_time):
                     break
 
         except requests.exceptions.HTTPError as e:
-            logger.error(f"中国电信，API请求失败: 状态码 {response.status_code}, 响应内容: {response.text}")
+            logger.error(f"{com_key}，API请求失败: 状态码 {response.status_code}, 响应内容: {response.text}")
             return None
     
     return bid_list
@@ -188,16 +189,16 @@ def lambda_handler(event, context):
     
     utc_now = datetime.now(timezone.utc)
     beijing_time = utc_now.astimezone(timezone(timedelta(hours=8)))        
-    end_time = beijing_time + timedelta(hours=5)
+    end_time = beijing_time + timedelta(hours=5.95)
     logger.info(f"end_time: {end_time}")
-    send_test = webhook_test.send_text(f"重启，必胜！\n {beijing_time}")
+    send_test = webhook_test.send_text(f"重启，必胜！{com_key}, {beijing_time}")
     logger.info(f"重启，必胜！\n {beijing_time}")
     
     bid_total = []
     while beijing_time <= end_time:
         try:
             # start_time = beijing_time - timedelta(days=1)
-            start_time = beijing_time - timedelta(minutes=30)
+            start_time = beijing_time - timedelta(minutes=20)
             logger.info(f"start_time: {start_time}")
             for keyword in keyword_list:
                 result = zgdx_search(keyword, start_time)
@@ -223,8 +224,8 @@ def lambda_handler(event, context):
                     time.sleep(5)
                     continue
         except Exception as e:
-            logger.error(f"中国电信，全局异常: {str(e)}")
-            error_send = webhook_test.send_text(f"中国电信，全局异常: {str(e)}")
+            logger.error(f"全局异常: {str(e)}")
+            error_send = webhook_test.send_text(f"{com_key}，全局异常: {str(e)}")
             
         # if len(bid_total) >= 20:
         #     bid_total = bid_total[-6:]
@@ -232,7 +233,7 @@ def lambda_handler(event, context):
         beijing_time = datetime.now(timezone(timedelta(hours=8)))
 
     now_time = beijing_time.strftime("%Y-%m-%d %H:%M:%S")
-    time_send = webhook_test.send_text(f"归零，更新！\n{now_time}")
+    time_send = webhook_test.send_text(f"归零，更新！{com_key}, {now_time}")
     logger.info(f"归零，更新！\n{now_time}")
     
 if __name__ == "__main__":
