@@ -159,8 +159,11 @@ def search(keyword, start_time):
             # logger.info(f"bid_time: {bid_time}")
             if bid_time >= start_time.replace(tzinfo=None):
                 logger.info(f"bid_time: {bid_time}")
+                pattern = r'\([^()]*\)|（[^（）]*）|<[^>]*>'
+                title = re.sub(pattern, '', list['title'])
+                logger.info(f"title: {title}")
                 bid = {
-                    "标题": re.sub(r'（.*?）|\(.*?\)', '', list['title']) ,
+                    "标题": title,
                     "链接":  f"https://www.dlnyzb.com/detail/{list['articleId']}"
                 }
                 bid_list.append(bid)
