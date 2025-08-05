@@ -11,18 +11,28 @@ import time
 from logging.handlers import RotatingFileHandler
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+from urllib.parse import quote
+from fake_useragent import UserAgent
+    
+with open('scripts/bid.json', 'r', encoding='utf-8') as f:
+    bid = json.load(f) 
+    keyword_main = bid["keyword"]["main"]
+    keyword_others = bid["keyword"]["others"]
+    keyword_list = keyword_main + keyword_others
+    not_list = bid["keyword"]["not"]
+    key = bid["key"]["key_jk"]
+    # key = bid["key"]["key_main"]
+    key_test = bid["key"]["key_test"]
 
-
-keyword_main = ["培训", "竞赛", "赋能", "会务", "营销"]
-keyword_list = ["交流活动", "辅助服务", "训战", "会议活动", "会议服务", "会展", "论坛", "实战", "服务支撑", "服务提质", "客户价值提升", "训练营"]
-keyword_list = keyword_main + keyword_list
-not_list = ["租赁", "设备采购", "办公室", "材料", "培训中心"]
-# not_list = not_list + keyword_main
+# key = os.getenv("key_jk")
+# key_test = os.getenv("key_test")
+com_key = "能力电源"
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 # 确保日志目录存在
-log_dir = "/root/scripts/output"
+log_dir = "./output"
+# log_dir = "scripts/output"
 os.makedirs(log_dir, exist_ok=True)  # 自动创建目录
 
 # 配置日志
@@ -30,15 +40,9 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 # 创建文件处理器（输出到scripts/output/bid_log.log）
-# 生成日期时间戳文件名（按天归档）
-log_file = os.path.join(
-    log_dir, 
-    f"bid_log_{datetime.now().strftime('%Y%m%d')}.log"  # bid_log_20240627.log
-)
-# 无需 mode='w' 会自动每天创建新文件
-# log_file = os.path.join(log_dir, "bid_log.log")
-# file_handler = logging.FileHandler(log_file, encoding='utf-8')
-file_handler = logging.FileHandler(log_file, encoding='utf-8', mode='w')
+utc_now = datetime.now(timezone.utc)
+log_file = os.path.join(log_dir, "bid_log_{com_key}_{utc_now}.log")
+file_handler = logging.FileHandler(log_file, encoding='utf-8')
 file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
 logger.addHandler(file_handler)
 
@@ -56,17 +60,18 @@ file_handler = RotatingFileHandler(
 
 # 配置重试策略
 retry_strategy = Retry(
-    total=20,                              # 总尝试次数（含首次请求）[2,4](@ref)
+    total=3,                              # 总尝试次数（含首次请求）[2,4](@ref)
     backoff_factor=1,                     # 指数退避间隔：{backoff_factor} * 2^(n-1)秒[4,5](@ref)
     status_forcelist=[500, 502, 503, 504],# 遇到这些状态码自动重试[3,5](@ref)
     allowed_methods=["GET", "POST"]       # 仅对指定HTTP方法重试[4](@ref)
 )
 
-
-key = os.getenv("BID_WIN")
-key_test = os.getenv("BID_TEST")
-# key_ot = os.getenv("BID_OT")
-
+try:
+    response = requests.get("https://api.ipify.org", timeout=10)
+    logger.info(f"当前代理IP: {response.text}")
+except Exception as e:
+    logger.info(f"代理请求失败: {e}")
+    
 class WeComWebhook:  
     BASE_URL = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key={key}"
     def __init__(self):
@@ -110,202 +115,71 @@ class WeComWebhookTest:
         except Exception as e:
             logger.error(f"消息发送失败: {str(e)}")
             return {"errcode": -1, "errmsg": "请求异常"}
-            
-def ct_search(keyword, start_time):
+
+def get_random_user_agent():
+    ua = UserAgent()
+    return ua.random
+    
+def search(keyword, start_time):
     session = requests.Session()
     adapter = HTTPAdapter(max_retries=retry_strategy)
     session.mount("https://", adapter)
-    home_url = "https://caigou.chinatelecom.com.cn"
-    try:
-        home_response = session.get(home_url)
-        home_response.raise_for_status()
+    # home_url = "http://www.youde.net/yd_zbcg/portal/index"
+    # try:
+    #     home_response = session.post(home_url)
+    #     home_response.raise_for_status()
 
-    except Exception as e:
-            logger.error(f"阳光采购网，主页请求失败: {str(e)}")
-            return None
-
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
-        'Content-Type': 'application/json;charset=UTF-8',
-    }
-
-    payload_type = ["xi9s", "e2no", "e3erht", "ru7of", "e8vif", "ds3fd2s", "f1f7e", "n0eves", "ow7t", "th4gie", "s1x5e"]
-    type_list = ["6", "1", "3", "4", "5", "14", "3", "7", "2", "8", "7"]
-    
-    api_url = "https://caigou.chinatelecom.com.cn/portal/base/announcementJoin/queryListNew"
-    bid_list = []
-    for i in range(len(payload_type)):
-        type = payload_type[i]
-        type_id = type_list[i]
-        payload = {
-            "title": keyword,
-            "pageSize": 10,
-            "pageNum": 1,
-            "type": type,
-            "provinceCode": ""
-        }
-
-        try:
-            response = session.post(
-                url=api_url,
-                headers=headers,
-                json=payload,
-                timeout=60
-            )
-            response.raise_for_status()              
-            data = response.json()
-            data_list = data['data']['list']
-            for list in data_list:
-                format_str = "%Y-%m-%d %H:%M:%S"
-                bid_time = datetime.strptime(list['createDate'], format_str)
-                if bid_time >= start_time.replace(tzinfo=None):
-                    bid = {
-                        "标题": list['docTitle'],
-                        "类型": list['docType'],
-                        "链接":  f"{home_url}/DeclareDetails?id={list['docId']}&type={type_id}&docTypeCode={list['docTypeCode']}&securityViewCode={list['securityViewCode']}"
-                    }
-                    bid_list.append(bid)
-                else:
-                    break
-
-        except requests.exceptions.HTTPError as e:
-            logger.error(f"阳光采购网，API请求失败: 状态码 {response.status_code}, 响应内容: {response.text}")
-            return None
-    
-    return bid_list
-    
-def tower_search(keyword, start_time):
-    session = requests.Session()
-    adapter = HTTPAdapter(max_retries=retry_strategy)
-    session.mount("https://", adapter)
-    home_url = "http://www.tower.com.cn/#/purAnnouncement?name=more&purchaseNoticeType=2&activeIndex=0"
-    try:
-        home_response = session.get(home_url)
-        home_response.raise_for_status()
-
-    except Exception as e:
-            logger.error(f"铁塔，主页请求失败: {str(e)}")
-            return None
+    # except Exception as e:
+    #         logger.error(f"{com_key}，主页请求失败: {str(e)}")
+    #         return None
 
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
-        'Content-Type': 'application/json;charset=UTF-8',
+        'User-Agent': get_random_user_agent(),
+        'Content-Type': 'application/json; charset=UTF-8',
     }
 
-    type_list = ["2", "45"]
-    docType_list = ["采购公告", "候选人及结果公示"]
-    
-    api_url = "http://www.tower.com.cn/supportal/v1/obp-notice/query-notice"
+    api_url = f"https://www.dlnyzb.com/_next/data/f755e5d5e6b34b16e8ab8b5bad6b19f65959f716/search.json"
+    params = {
+        "kw": keyword,
+        "rg": 2
+    }
     bid_list = []
-    for i in range(len(type_list)):
-        type_id = type_list[i]
-        docType = docType_list[i]
-        payload = {
-            "noticeTitle": keyword,
-            "purchaseNoticeType": type_id,
-            "orgName":"",
-            "times":"",
-            "transformationField":"",
-            "conversionMethod":"",
-            "current":1,
-            "size":20
-        }
-
-        try:
-            response = session.post(
-                url=api_url,
-                headers=headers,
-                json=payload,
-                timeout=60
-            )
-            response.raise_for_status()
-                
-            data = response.json()
-            
-            data_list = data['data']['records']
-            for list in data_list:
-                format_str = "%Y-%m-%d %H:%M:%S"
-                bid_time = datetime.strptime(list['createTime'], format_str)
-                if bid_time >= start_time.replace(tzinfo=None):
-                    bid = {
-                        "标题": list['noticeTitle'],
-                        "类型": docType,
-                        "链接":  f"http://www.tower.com.cn/#/noticeDetail?id={list['noticeId']}"
-                    }
-                    bid_list.append(bid)
-                else:
-                    break
-
-        except requests.exceptions.HTTPError as e:
-            logger.error(f"铁塔，API请求失败: 状态码 {response.status_code}, 响应内容: {response.text}")
-            return None
+    try:
+        response = session.post(
+            url=api_url,
+            headers=headers,
+            params=params,
+            timeout=60
+        )
+        response.raise_for_status()
         
-    return bid_list
+        data = response.json()
+        # logger.info(f"data: {data}")
+        data_list = data['pageProps']['initialState']['searchArticlesList']['data']['articles']
+        # logger.info(f"data_list[1]: {data_list[1]}")
+        for list in data_list:
+            # format_str = "%Y-%m-%d %H:%M:%S"
+            bid_time = datetime.utcfromtimestamp(list['noticeTime']/1000)+ timedelta(hours=8)
+            # bid_time = bid_time.strftime(format_str)
+            # logger.info(f"bid_time: {bid_time}")
+            if bid_time >= start_time.replace(tzinfo=None):
+                logger.info(f"bid_time: {bid_time}")
+                pattern = r'\([^()]*\)|（[^（）]*）|<[^>]*>'
+                title = re.sub(pattern, '', list['title'])
+                logger.info(f"title: {title}")
+                bid = {
+                    "标题": title,
+                    "链接":  f"https://www.dlnyzb.com/detail/{list['articleId']}"
+                }
+                bid_list.append(bid)
+            else:
+                break
 
-def uc_search(keyword, start_time):
-    session = requests.Session()
-    adapter = HTTPAdapter(max_retries=retry_strategy)
-    session.mount("https://", adapter)
-    home_url = "http://www.chinaunicombidding.cn"
-    try:
-        home_response = session.get(home_url)
-        home_response.raise_for_status()
-
-    except Exception as e:
-            logger.error(f"联通，主页请求失败: {str(e)}")
-            return None
-
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36',
-        'Content-Type': 'application/json;charset=UTF-8',
-    }
-
-    type_list = ["BizAnnoVoMtable"]
+    except requests.exceptions.HTTPError as e:
+        logger.error(f"{com_key}，API请求失败: 状态码 {response.status_code}, 响应内容: {response.text}")
+        return None
     
-    api_url = "http://www.chinaunicombidding.cn/api/v1/bizAnno/getAnnoList?Wlfknewu=W0k9YalqEEx0i_LSfYfLYyyc09sYkIQFGb_O.XMN9amTdA_BXL43EqnXiOBb.KXBDJ13j6zP.jAvoFNFTrENOAVjvuPnaIiI"
-    bid_list = []
-    for i in range(len(type_list)):
-        type_id = type_list[i]
-        docType = docType_list[i]
-        payload = {
-            "annoName": keyword,
-            "modeNo": type_id
-        }
-
-        try:
-            response = session.post(
-                url=api_url,
-                headers=headers,
-                json=payload,
-                timeout=60
-            )
-            response.raise_for_status()
-                
-            data = response.json()
-            
-            data_list = data['data']['records']
-            for list in data_list:
-                if list['procurementType'] == "服务":
-                    format_str = "%Y-%m-%d %H:%M:%S"
-                    bid_time = datetime.strptime(list['createDate'], format_str)
-                    if bid_time >= start_time.replace(tzinfo=None):
-                        bid = {
-                            "标题": list['annoName'],
-                            "类型": list['annoType'],
-                            "链接":  f"http://www.chinaunicombidding.cn/bidInformation/detail?id={list['id']}"
-                        }
-                        bid_list.append(bid)
-                    else:
-                        break
-                else:
-                    continue
-
-        except requests.exceptions.HTTPError as e:
-            logger.error(f"联通，API请求失败: 状态码 {response.status_code}, 响应内容: {response.text}")
-            return None
-        
     return bid_list
-    
 
 def lambda_handler(event, context):
     """Lambda入口函数"""
@@ -313,77 +187,56 @@ def lambda_handler(event, context):
     webhook = WeComWebhook()
     webhook_test = WeComWebhookTest()
     logger.info("【调试】Webhook初始化成功")
-    try:
-        utc_now = datetime.now(timezone.utc)
-        beijing_time = utc_now.astimezone(timezone(timedelta(hours=8)))        
-        end_time = beijing_time + timedelta(hours=18)
-        # start_time = beijing_time - timedelta(minutes=65)
-        # logger.info(f"start_time: {start_time}")
-        logger.info(f"end_time: {end_time}")
-        send_test = webhook_test.send_text(f"重启，必胜！\n {beijing_time}")
-        # send_ot = webhook_ot.send_text(f"测试消息！\n {beijing_time}")
-        logger.info(f"重启，必胜！\n {beijing_time}")
-        
-        bid_total = []
-        while beijing_time <= end_time:
-            # start_time = beijing_time - timedelta(days=2)
-            start_time = beijing_time - timedelta(minutes=2)
+    
+    utc_now = datetime.now(timezone.utc)
+    beijing_time = utc_now.astimezone(timezone(timedelta(hours=8)))        
+    # end_time = beijing_time + timedelta(hours=5.95)
+    end_time = beijing_time + timedelta(hours=17)
+    logger.info(f"end_time: {end_time}")
+    send_test = webhook_test.send_text(f"重启，必胜！{com_key}, {beijing_time}")
+    logger.info(f"重启，必胜！\n {beijing_time}")
+    
+    bid_total = []
+    while beijing_time <= end_time:
+        try:
+            start_time = beijing_time - timedelta(days=1)
+            # start_time = beijing_time - timedelta(minutes=20)
             logger.info(f"start_time: {start_time}")
-            # send_test = webhook_test.send_text(f"start_time: {start_time}")
             for keyword in keyword_list:
-                result = []                
-                # result_ct = ct_search(keyword, start_time)
-                # if result_ct is not None:
-                    # result = result + result_ct
-                    
-                result_tower = tower_search(keyword, start_time)
-                if result_tower is not None:
-                    result = result + result_tower
-
-                # result_uc = uc_search(keyword, start_time)
-                # if result_uc is not None:
-                #     result = result + result_uc
-                    
+                result = search(keyword, start_time)
                 message = ''
                 for msg in result:
                     if msg not in bid_total:
                         if any(notword in msg['标题'] for notword in not_list):
-                            # logger.info(f"msg['标题']：{msg['标题']}")
+                            logger.info(f"keyword：{keyword}，msg['标题']：{msg['标题']}")
                             continue
                         else:
                             bid_total.append(msg)
-                            message = message + f"【标题】{msg['标题']}\n【类型】{msg['类型']}\n【链接】{msg['链接']}\n\n"
+                            logger.info(f"keyword：{keyword}，msg['标题']：{msg['标题']}")
+                            message = message + f"【标题】{msg['标题']}\n【链接】{msg['链接']}\n\n"
                 
                 if message != '':
                     message = message[:-2]
-                    result = webhook.send_text(message)
+                    # result = webhook.send_text(message)
                     result_test = webhook_test.send_text(message)
-                    # result_ot = webhook_ot.send_text(message)
-                    # logger.info(f"关键词：{keyword}\n消息详情：{message}")
-                    logger.info(f"【调试】发送结果: {json.dumps(result)}")
-                    logger.info(f"【调试】发送结果: {json.dumps(result_test)}")
+                    time.sleep(5)
                 else:
-                    # logger.info(f"关键词：{keyword}\n消息详情：no")
+                    time.sleep(5)
                     continue
-            if len(bid_total) >= 20:
-                # logger.info(f"len：{len(bid_total)}")
-                bid_total = bid_total[-6:]
-                # logger.info(f"len：{len(bid_total)}")
-            beijing_time = datetime.now(timezone(timedelta(hours=8)))
-            continue
+        
+        except Exception as e:
+            logger.error(f"全局异常: {str(e)}")
+            error_send = webhook_test.send_text(f"{com_key}，全局异常: {str(e)}")
+            
+        # if len(bid_total) >= 20:
+        #     bid_total = bid_total[-6:]
+            
+        beijing_time = datetime.now(timezone(timedelta(hours=8)))
+        break
 
-        now_time = beijing_time.strftime("%Y-%m-%d %H:%M:%S")
-        time_send = webhook_test.send_text(f"归零，更新！\n{now_time}")
-        logger.info(f"归零，更新！\n{now_time}")
-    
-    except Exception as e:
-        logger.error(f"全局异常: {str(e)}")
-        # error_send = webhook.send_text(f"全局异常: {str(e)}")
-        error_send = webhook_test.send_text(f"全局异常: {str(e)}")
-        return {
-            'statusCode': 500,
-            'body': json.dumps({'error': str(e)})
-        }
+    now_time = beijing_time.strftime("%Y-%m-%d %H:%M:%S")
+    time_send = webhook_test.send_text(f"归零，更新！{com_key},{now_time}")
+    logger.info(f"归零，更新！\n{now_time}")
     
 if __name__ == "__main__":
     func = lambda_handler("", "")
