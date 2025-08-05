@@ -155,7 +155,7 @@ def search(keyword, start_time):
         for list in data_list:
             format_str = "%Y-%m-%d %H:%M:%S"
             bid_time = datetime.utcfromtimestamp(list['noticeTime']/1000)+ timedelta(hours=8)
-            bid_time = bidtime.strftime(format_str)
+            bid_time = bid_time.strftime(format_str)
             logger.info(f"bid_time: {bid_time}")
             if bid_time >= start_time.replace(tzinfo=None):
                 bid = {
