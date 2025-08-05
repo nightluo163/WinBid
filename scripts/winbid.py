@@ -13,8 +13,9 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from urllib.parse import quote
 from fake_useragent import UserAgent
-    
-with open('scripts/bid.json', 'r', encoding='utf-8') as f:
+
+with open('./bid.json', 'r', encoding='utf-8') as f:
+# with open('scripts/bid.json', 'r', encoding='utf-8') as f:
     bid = json.load(f) 
     keyword_main = bid["keyword"]["main"]
     keyword_others = bid["keyword"]["others"]
