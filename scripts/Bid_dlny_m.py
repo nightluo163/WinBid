@@ -156,8 +156,9 @@ def search(keyword, start_time):
             # format_str = "%Y-%m-%d %H:%M:%S"
             bid_time = datetime.utcfromtimestamp(list['noticeTime']/1000)+ timedelta(hours=8)
             # bid_time = bid_time.strftime(format_str)
-            logger.info(f"bid_time: {bid_time}")
+            # logger.info(f"bid_time: {bid_time}")
             if bid_time >= start_time.replace(tzinfo=None):
+                logger.info(f"bid_time: {bid_time}")
                 bid = {
                     "标题": re.sub(r'（.*?）|\(.*?\)', '', list['title']) ,
                     "链接":  f"https://www.dlnyzb.com/detail/{list['articleId']}"
@@ -189,7 +190,7 @@ def lambda_handler(event, context):
     bid_total = []
     while beijing_time <= end_time:
         try:
-            start_time = beijing_time - timedelta(days=2)
+            start_time = beijing_time - timedelta(days=1)
             # start_time = beijing_time - timedelta(minutes=20)
             logger.info(f"start_time: {start_time}")
             for keyword in keyword_list:
@@ -208,7 +209,7 @@ def lambda_handler(event, context):
                 if message != '':
                     message = message[:-2]
                     # result = webhook.send_text(message)
-                    # result_test = webhook_test.send_text(message)
+                    result_test = webhook_test.send_text(message)
                     time.sleep(5)
                 else:
                     time.sleep(5)
