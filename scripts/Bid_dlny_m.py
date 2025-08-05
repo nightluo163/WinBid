@@ -133,21 +133,6 @@ def search(keyword, start_time):
         'Content-Type': 'application/json; charset=UTF-8',
     }
 
-    # headers = {
-    #     'Accept': 'application/json, text/javascript, */*; q=0.01',
-    #     'Accept-Encoding': 'gzip, deflate',
-    #     'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8,ar;q=0.7',
-    #     'Content-Length': '44',
-    #     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-    #     'Cookie': 'JSESSIONID=17BF927452F2661B5CFD7BCD8DB16F20',
-    #     'Host': 'www.youde.net',
-    #     'Origin': 'http://www.youde.net',
-    #     'Proxy-Connection': 'keep-alive',
-    #     'Referer': 'http://www.youde.net/yd_zbcg/portal/toSearchArticle?title=%E5%9F%B9%E8%AE%AD',
-    #     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-    #     'X-Requested-With': 'XMLHttpRequest'
-    # }
-
     api_url = f"https://www.dlnyzb.com/_next/data/f755e5d5e6b34b16e8ab8b5bad6b19f65959f716/search.json"
     params = {
         "kw": keyword,
@@ -164,16 +149,17 @@ def search(keyword, start_time):
         response.raise_for_status()
         
         data = response.json()
-        logger.info(f"data: {data}")
+        # logger.info(f"data: {data}")
         data_list = data['pageProps']['initialState']['searchArticlesList']['data']['articles']
-        logger.info(f"data_list[1]: {data_list[1]}")
+        # logger.info(f"data_list[1]: {data_list[1]}")
         for list in data_list:
             format_str = "%Y-%m-%d %H:%M:%S"
-            bid_time = datetime.strptime(datetime.utcfromtimestamp(list['noticeTime']/1000)+ timedelta(hours=8), format_str)
+            bid_time = datetime.utcfromtimestamp(list['noticeTime']/1000)+ timedelta(hours=8)
+            bid_time = bidtime.strftime(format_str)
             logger.info(f"bid_time: {bid_time}")
             if bid_time >= start_time.replace(tzinfo=None):
                 bid = {
-                    "标题": list['title'],
+                    "标题": re.sub(r'（.*?）|\(.*?\)', '', list['title']) ,
                     "链接":  f"https://www.dlnyzb.com/detail/{list['articleId']}"
                 }
                 bid_list.append(bid)
@@ -203,8 +189,8 @@ def lambda_handler(event, context):
     bid_total = []
     while beijing_time <= end_time:
         try:
-            # start_time = beijing_time - timedelta(days=10)
-            start_time = beijing_time - timedelta(minutes=20)
+            start_time = beijing_time - timedelta(days=2)
+            # start_time = beijing_time - timedelta(minutes=20)
             logger.info(f"start_time: {start_time}")
             for keyword in keyword_list:
                 result = search(keyword, start_time)
@@ -221,7 +207,7 @@ def lambda_handler(event, context):
                 
                 if message != '':
                     message = message[:-2]
-                    result = webhook.send_text(message)
+                    # result = webhook.send_text(message)
                     # result_test = webhook_test.send_text(message)
                     time.sleep(5)
                 else:
