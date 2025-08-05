@@ -153,9 +153,9 @@ def search(keyword, start_time):
         data_list = data['pageProps']['initialState']['searchArticlesList']['data']['articles']
         # logger.info(f"data_list[1]: {data_list[1]}")
         for list in data_list:
-            format_str = "%Y-%m-%d %H:%M:%S"
+            # format_str = "%Y-%m-%d %H:%M:%S"
             bid_time = datetime.utcfromtimestamp(list['noticeTime']/1000)+ timedelta(hours=8)
-            bid_time = bid_time.strftime(format_str)
+            # bid_time = bid_time.strftime(format_str)
             logger.info(f"bid_time: {bid_time}")
             if bid_time >= start_time.replace(tzinfo=None):
                 bid = {
