@@ -198,7 +198,7 @@ def lambda_handler(event, context):
     while beijing_time <= end_time:
         try:
             # start_time = beijing_time - timedelta(days=1)
-              start_time = beijing_time - timedelta(hours=6)
+            start_time = beijing_time - timedelta(hours=6)
             # start_time = beijing_time - timedelta(minutes=20)
             logger.info(f"start_time: {start_time}")
             for keyword in keyword_list:
