@@ -226,7 +226,7 @@ def lambda_handler(event, context):
             bid_total = bid_total[-20:]
             
         beijing_time = datetime.now(timezone(timedelta(hours=8)))
-        break
+        # break
 
     now_time = beijing_time.strftime("%Y-%m-%d %H:%M:%S")
     time_send = webhook_test.send_text(f"归零，更新！{com_key},{now_time}")
