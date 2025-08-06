@@ -19,7 +19,7 @@ with open('scripts/bid.json', 'r', encoding='utf-8') as f:
     keyword_main = bid["keyword"]["main"]
     keyword_others = bid["keyword"]["others"]
     keyword_list = keyword_main + keyword_others
-    not_list = bid["keyword"]["not"]
+    not_list = bid["keyword"]["not"]+["电信"]
 
 key = os.getenv("key_jk")
 key_test = os.getenv("key_test")
@@ -213,17 +213,17 @@ def lambda_handler(event, context):
                     message = message[:-2]
                     # result = webhook.send_text(message)
                     result_test = webhook_test.send_text(message)
-                    time.sleep(5)
+                    time.sleep(60)
                 else:
-                    time.sleep(5)
+                    time.sleep(60)
                     continue
         
         except Exception as e:
             logger.error(f"全局异常: {str(e)}")
             error_send = webhook_test.send_text(f"{com_key}，全局异常: {str(e)}")
             
-        if len(bid_total) >= 20:
-            bid_total = bid_total[-6:]
+        if len(bid_total) >= 40:
+            bid_total = bid_total[-20:]
             
         beijing_time = datetime.now(timezone(timedelta(hours=8)))
         break
