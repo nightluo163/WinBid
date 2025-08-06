@@ -19,7 +19,7 @@ with open('scripts/bid.json', 'r', encoding='utf-8') as f:
     keyword_main = bid["keyword"]["main"]
     keyword_others = bid["keyword"]["others"]
     keyword_list = keyword_main + keyword_others
-    not_list = bid["keyword"]["not"]+["电信"]
+    not_list = bid["keyword"]["not"]+["电信","中核浙能2025年培训工程师技能提升培训成交候选人公示", "中核浙能2025-2026年福清培训人员职业健康体检项目采购公告", "延吉市人民法院审判执行辅助服务项目中标结果公告"]
 
 key = os.getenv("key_jk")
 key_test = os.getenv("key_test")
@@ -211,11 +211,11 @@ def lambda_handler(event, context):
                 
                 if message != '':
                     message = message[:-2]
-                    # result = webhook.send_text(message)
-                    result_test = webhook_test.send_text(message)
-                    time.sleep(60)
+                    result = webhook.send_text(message)
+                    # result_test = webhook_test.send_text(message)
+                    time.sleep(120)
                 else:
-                    time.sleep(60)
+                    time.sleep(120)
                     continue
         
         except Exception as e:
